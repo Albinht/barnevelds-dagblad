@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client'
 import bcrypt from 'bcryptjs'
-import { articlesData } from '../src/data/articles'
-import { bedrijvenData } from '../src/data/bedrijven'
+import articlesData from '../data/articles.json'
+import bedrijvenData from '../data/bedrijven.json'
 
 const prisma = new PrismaClient()
 
