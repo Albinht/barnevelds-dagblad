@@ -31,22 +31,7 @@ export default function LogoUploadComponent({
     }
   }, [])
 
-  const handleDrop = useCallback((e: React.DragEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
-    setDragActive(false)
-    
-    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      handleFileUpload(e.dataTransfer.files[0])
-    }
-  }, [handleFileUpload])
-
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      handleFileUpload(e.target.files[0])
-    }
-  }
-
+  // Move handleFileUpload BEFORE handleDrop to fix hoisting error
   const handleFileUpload = useCallback(async (file: File) => {
     setIsUploading(true)
     setUploadError(null)
@@ -99,6 +84,22 @@ export default function LogoUploadComponent({
       setIsUploading(false)
     }
   }, [onLogoChange])
+
+  const handleDrop = useCallback((e: React.DragEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setDragActive(false)
+    
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      handleFileUpload(e.dataTransfer.files[0])
+    }
+  }, [handleFileUpload])
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      handleFileUpload(e.target.files[0])
+    }
+  }
 
   const displayLogo = previewUrl || currentLogo
 
