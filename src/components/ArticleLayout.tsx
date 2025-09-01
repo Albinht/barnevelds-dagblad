@@ -137,7 +137,7 @@ export default function ArticleLayout({ article, children, featuredBedrijven = [
             <NetBinnenWidget />
             
             {/* Advertisement Slot 1 */}
-            <Advertisement slot="article-sidebar-1" width={300} height={250} />
+            <Advertisement height={250} />
             
             {/* Meest Gelezen Widget */}
             <MostReadWidget />
@@ -146,7 +146,7 @@ export default function ArticleLayout({ article, children, featuredBedrijven = [
             <RelatedArticles currentArticle={article} limit={3} />
             
             {/* Advertisement Slot 2 */}
-            <Advertisement slot="article-sidebar-2" width={300} height={600} />
+            <Advertisement height={600} />
             
             {/* Bedrijven in de Spotlight */}
             <SpotlightBedrijven bedrijven={featuredBedrijven} />
