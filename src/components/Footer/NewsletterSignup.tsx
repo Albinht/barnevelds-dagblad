@@ -46,9 +46,9 @@ export default function NewsletterSignup() {
   }
 
   return (
-    <section className="bg-brand-blue text-white pt-4 pb-2 relative">
-      {/* Logo Overlay - positioned to overlap above the blue bar */}
-      <div className="absolute -top-8 left-32 z-50">
+    <section className="bg-brand-blue text-white py-6 lg:pt-4 lg:pb-2 relative">
+      {/* Logo Overlay - Desktop only */}
+      <div className="hidden lg:block absolute -top-8 left-32 z-50">
         <div 
           className="flex items-center justify-center" 
           style={{width: '105px', height: '105px'}}
@@ -64,7 +64,7 @@ export default function NewsletterSignup() {
       </div>
 
       <div className="container mx-auto px-4">
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3" style={{paddingLeft: '120px'}}>
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 lg:gap-3 lg:pl-32">
           {/* Newsletter Content and Form */}
           <div className="flex-1 max-w-lg mx-auto lg:mx-0">
             <div className="text-center lg:text-left">
@@ -72,12 +72,12 @@ export default function NewsletterSignup() {
                 {footerContent.newsletter.title}
               </h2>
               
-              <p className="text-sm text-blue-100 mb-3">
+              <p className="text-xs md:text-sm text-blue-100 mb-3">
                 Wil je elke dag de Dagelijkse nieuwsupdate nieuwsbrief van BD ontvangen via e-mail?
               </p>
               
-              <form onSubmit={handleSubmit} className="mb-1">
-                <div className="flex gap-2">
+              <form onSubmit={handleSubmit} className="mb-2">
+                <div className="flex flex-col sm:flex-row gap-2">
                   <div className="flex-1">
                     <label htmlFor="newsletter-email" className="sr-only">
                       E-mailadres
@@ -88,7 +88,7 @@ export default function NewsletterSignup() {
                       value={formData.email}
                       onChange={(e) => setFormData({ email: e.target.value })}
                       placeholder={footerContent.newsletter.placeholder}
-                      className="w-full px-3 py-1.5 rounded bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-yellow focus:ring-offset-1 focus:ring-offset-brand-blue text-sm"
+                      className="w-full px-3 py-2 sm:py-1.5 rounded bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-yellow focus:ring-offset-1 focus:ring-offset-brand-blue text-sm"
                       required
                       disabled={isSubmitting}
                     />
@@ -96,7 +96,7 @@ export default function NewsletterSignup() {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="bg-brand-yellow text-black font-semibold px-3 py-1.5 rounded hover:bg-yellow-400 focus:outline-none focus:ring-2 focus:ring-brand-yellow focus:ring-offset-1 focus:ring-offset-brand-blue transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm flex-shrink-0"
+                    className="bg-brand-yellow text-black font-semibold px-4 py-2 sm:px-3 sm:py-1.5 rounded hover:bg-yellow-400 focus:outline-none focus:ring-2 focus:ring-brand-yellow focus:ring-offset-1 focus:ring-offset-brand-blue transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm w-full sm:w-auto"
                   >
                     {isSubmitting ? 'Aanmelden...' : footerContent.newsletter.buttonText}
                   </button>
@@ -112,8 +112,8 @@ export default function NewsletterSignup() {
             </div>
           </div>
 
-          {/* Twitter Icon Only */}
-          <div className="flex-shrink-0">
+          {/* Twitter Icon - Hidden on mobile, shown on desktop */}
+          <div className="hidden lg:block flex-shrink-0">
             <a
               href="https://twitter.com/barnevelds_dagblad"
               target="_blank"
