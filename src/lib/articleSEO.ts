@@ -25,9 +25,6 @@ export function generateArticleMetadata(article: Article): Metadata {
     ...(article.tags || [])
   ].join(', ')
   
-  // Generate structured data
-  const jsonLd = generateArticleJsonLd(article)
-  
   return {
     title: `${article.title} | ${defaultSEO.siteName}`,
     description: article.summary || article.excerpt,
@@ -137,12 +134,6 @@ export function generateArticleMetadata(article: Article): Metadata {
       },
     },
     
-    // Structured data
-    ...(jsonLd && {
-      other: {
-        ...((typeof jsonLd === 'object') ? jsonLd : {}),
-      }
-    }),
   }
 }
 

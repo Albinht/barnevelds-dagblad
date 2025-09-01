@@ -1,20 +1,8 @@
-export interface Article {
-  id: string
-  title: string
-  summary: string
-  excerpt: string
-  content?: string
-  image: string
-  category: string
-  tags?: string[]
-  premium: boolean
+import { Article } from '@/types/article'
+
+// Extend Article type to include featured property
+export interface ArticleWithFeatured extends Article {
   featured?: boolean
-  author: string
-  publishedAt: string
-  updatedAt?: string
-  comments?: number
-  slug: string
-  timestamp?: string
 }
 
 export interface FilterOptions {
@@ -42,7 +30,7 @@ export function getArticlesByCategory(
     
   // Apply additional filters
   if (featured !== undefined) {
-    filtered = filtered.filter(article => !!article.featured === featured)
+    filtered = filtered.filter(article => !!(article as ArticleWithFeatured).featured === featured)
   }
   
   if (premium !== undefined) {
@@ -83,7 +71,7 @@ export function getArticlesByTag(
     
   // Apply additional filters
   if (featured !== undefined) {
-    filtered = filtered.filter(article => !!article.featured === featured)
+    filtered = filtered.filter(article => !!(article as ArticleWithFeatured).featured === featured)
   }
   
   if (premium !== undefined) {
@@ -116,7 +104,7 @@ export function getFeaturedArticles(
   
   return articles
     .filter(article => 
-      (article.featured || article.premium) &&
+      ((article as ArticleWithFeatured).featured || article.premium) &&
       !excludeIds.includes(article.id)
     )
     .sort((a, b) => {
@@ -261,7 +249,7 @@ export function getCategoryPageArticles(
   }
   
   // Get hero article (first featured or first article)
-  const heroArticle = categoryArticles.find(article => article.featured) || categoryArticles[0]
+  const heroArticle = categoryArticles.find(article => (article as ArticleWithFeatured).featured) || categoryArticles[0]
   
   // Get grid articles (excluding hero)
   const gridArticles = categoryArticles
