@@ -5,6 +5,38 @@ import bedrijvenData from '../data/bedrijven.json'
 
 const prisma = new PrismaClient()
 
+// Type definitions for imported data
+type ArticleData = {
+  slug: string
+  title: string
+  excerpt: string
+  summary: string
+  content?: string
+  image: string
+  category: string
+  tags?: string[]
+  premium?: boolean
+  publishedAt?: string
+  timestamp?: string
+  author?: string
+}
+
+type BedrijfData = {
+  id: string
+  naam: string
+  beschrijving: string
+  categorie: string
+  logo?: string
+  website?: string
+  telefoon?: string
+  email?: string
+  adres?: string
+  stad?: string
+  featured?: boolean
+  label?: string
+  timestamp?: string
+}
+
 async function main() {
   console.log('🌱 Starting database seed...')
   
@@ -38,7 +70,7 @@ async function main() {
   
   // Seed articles
   console.log('📰 Seeding articles...')
-  for (const article of articlesData) {
+  for (const article of articlesData as ArticleData[]) {
     await prisma.article.upsert({
       where: { slug: article.slug },
       update: {},
@@ -64,21 +96,24 @@ async function main() {
   
   // Seed bedrijven
   console.log('🏢 Seeding bedrijven...')
-  for (const bedrijf of bedrijvenData) {
+  for (const bedrijf of bedrijvenData as BedrijfData[]) {
+    // Create slug from name
+    const slug = bedrijf.naam.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
+    
     await prisma.bedrijf.upsert({
-      where: { slug: bedrijf.slug },
+      where: { slug },
       update: {},
       create: {
-        slug: bedrijf.slug,
-        name: bedrijf.name,
-        description: bedrijf.description,
-        category: bedrijf.category,
+        slug,
+        name: bedrijf.naam,
+        description: bedrijf.beschrijving,
+        category: bedrijf.categorie,
         logo: bedrijf.logo || null,
         website: bedrijf.website || null,
-        phone: bedrijf.phone || null,
+        phone: bedrijf.telefoon || null,
         email: bedrijf.email || null,
-        address: bedrijf.address || null,
-        city: bedrijf.city || 'Barneveld',
+        address: bedrijf.adres || null,
+        city: bedrijf.stad || 'Barneveld',
         featured: bedrijf.featured || false,
         active: true
       }

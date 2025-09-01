@@ -54,23 +54,25 @@ export default function NewsHomepage({ articles, bedrijven }: NewsHomepageProps)
   )
 
   return (
-    <div className="container mx-auto px-4 py-6">
-      <div className="flex gap-6">
-        {/* Main Content - 75% width */}
-        <div className="flex-1">
+    <div className="container mx-auto px-0 lg:px-4 py-4 md:py-6">
+      <div className="flex flex-col lg:flex-row gap-6">
+        {/* Main Content */}
+        <div className="flex-1 w-full">
           {/* Top Featured Grid */}
-          <div className="mb-12">
+          <div className="mb-6 md:mb-12 px-4 lg:px-0">
             <NewsGrid articles={mainGridArticles} />
           </div>
 
           {/* Category Sections */}
-          <RegioGrid articles={regioArticles} />
-          <SportGrid articles={sportArticles} />
-          <ShowGrid articles={showArticles} />
-          <KijkGrid articles={kijkArticles} />
+          <div className="space-y-6 md:space-y-8">
+            <RegioGrid articles={regioArticles} />
+            <SportGrid articles={sportArticles} />
+            <ShowGrid articles={showArticles} />
+            <KijkGrid articles={kijkArticles} />
+          </div>
         </div>
 
-        {/* Sidebar - 25% width */}
+        {/* Desktop Sidebar */}
         <div className="w-80 flex-shrink-0 hidden lg:block">
           <LoginCTA />
           <SpotlightBedrijven bedrijven={bedrijven} />
@@ -79,7 +81,7 @@ export default function NewsHomepage({ articles, bedrijven }: NewsHomepageProps)
       </div>
 
       {/* Mobile Sidebar - shown below main content on smaller screens */}
-      <div className="lg:hidden mt-8">
+      <div className="lg:hidden mt-6 md:mt-8 space-y-4 w-full max-w-md mx-auto px-4">
         <LoginCTA />
         <SpotlightBedrijven bedrijven={bedrijven} />
         <NewsTicker articles={tickerArticles} />

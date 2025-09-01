@@ -30,7 +30,7 @@ const emergencyAlerts = [
 
 export default function LoginCTA() {
   return (
-    <div className="bg-white rounded-lg p-4 shadow-sm mb-6">
+    <div className="bg-white rounded-lg p-4 shadow-sm mb-6 w-full">
       <div className="flex items-center gap-2 mb-4">
         <h3 className="text-lg font-bold text-red-600">
           112 MELDINGEN

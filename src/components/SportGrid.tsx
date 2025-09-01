@@ -13,7 +13,7 @@ export default function SportGrid({ articles }: SportGridProps) {
   const listArticles = articles.slice(4)
 
   return (
-    <section className="mb-12">
+    <section className="mb-12 px-4 lg:px-0">
       <div className="border-b-4 border-brand-blue mb-6">
         <h2 className="text-2xl font-bold text-brand-blue uppercase mb-2">SPORT</h2>
       </div>

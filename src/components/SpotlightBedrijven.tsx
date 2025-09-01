@@ -40,7 +40,7 @@ export default function SpotlightBedrijven({ bedrijven }: SpotlightBedrijvenProp
   if (!bedrijven || bedrijven.length === 0) return null
 
   return (
-    <div className="bg-white rounded-lg shadow-sm mb-6 overflow-hidden">
+    <div className="bg-white rounded-lg shadow-sm mb-6 overflow-hidden w-full">
       {/* Blue Header */}
       <div className="bg-[#0F47AF] px-4 py-3">
         <h3 className="text-white font-bold text-sm uppercase tracking-wide">

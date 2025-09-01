@@ -12,7 +12,7 @@ export default function NewsTicker({ articles }: NewsTickerProps) {
     .slice(0, 5)
 
   return (
-    <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+    <div className="bg-white rounded-lg shadow-sm overflow-hidden w-full">
       {/* Header */}
       <div className="bg-brand-darkred text-brand-blue px-4 py-3">
         <h3 className="font-bold text-sm uppercase">NET BINNEN</h3>
