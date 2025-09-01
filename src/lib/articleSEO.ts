@@ -90,7 +90,7 @@ export function generateArticleMetadata(article: Article): Metadata {
     // Article-specific metadata
     other: {
       'article:published_time': publishDate.toISOString(),
-      'article:modified_time': updatedDate?.toISOString(),
+      ...(updatedDate && { 'article:modified_time': updatedDate.toISOString() }),
       'article:author': article.author,
       'article:section': article.category,
       'article:tag': article.tags?.join(', ') || '',
