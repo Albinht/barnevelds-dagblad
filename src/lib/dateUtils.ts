@@ -125,7 +125,7 @@ export function isToday(date: string | Date): boolean {
       dateObj.getMonth() === today.getMonth() &&
       dateObj.getFullYear() === today.getFullYear()
     );
-  } catch (error) {
+  } catch {
     return false;
   }
 }
@@ -157,7 +157,7 @@ export function getRelativeTime(date: string | Date): string {
     } else {
       return formatDateShort(dateObj);
     }
-  } catch (error) {
+  } catch {
     return formatDateShort(date);
   }
 }

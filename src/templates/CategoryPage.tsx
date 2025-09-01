@@ -77,7 +77,7 @@ export default async function CategoryPage({
                     Nog geen artikelen beschikbaar
                   </h3>
                   <p className="text-gray-600">
-                    Er zijn momenteel nog geen artikelen in de categorie "{category}".
+                    Er zijn momenteel nog geen artikelen in de categorie &quot;{category}&quot;.
                   </p>
                 </div>
               </div>

@@ -9,7 +9,7 @@ export async function getBedrijvenData() {
     const bedrijven = JSON.parse(data)
     
     // Filter for featured companies
-    return bedrijven.filter((bedrijf: any) => bedrijf.featured)
+    return bedrijven.filter((bedrijf: { featured: boolean }) => bedrijf.featured)
   } catch (error) {
     console.error('Error loading bedrijven:', error)
     return []
@@ -23,7 +23,7 @@ export async function getArticlesData() {
     const articles = JSON.parse(data)
     
     // Sort by timestamp/publishedAt descending (newest first)
-    return articles.sort((a: any, b: any) => {
+    return articles.sort((a: { publishedAt?: string; timestamp?: number }, b: { publishedAt?: string; timestamp?: number }) => {
       const dateA = new Date(a.publishedAt || a.timestamp || 0)
       const dateB = new Date(b.publishedAt || b.timestamp || 0)
       return dateB.getTime() - dateA.getTime()

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, use } from 'react'
+import { useState, useEffect, use, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import LogoUploadComponent from '@/components/admin/LogoUploadComponent'
 
@@ -35,11 +35,7 @@ export default function EditBedrijfPage({ params }: { params: Promise<{ id: stri
     label: null as 'PREMIUM' | 'NIEUW' | null,
   })
 
-  useEffect(() => {
-    fetchBedrijf()
-  }, [id])
-
-  const fetchBedrijf = async () => {
+  const fetchBedrijf = useCallback(async () => {
     try {
       const response = await fetch(`/api/bedrijven/${id}`)
       if (response.ok) {
@@ -65,7 +61,11 @@ export default function EditBedrijfPage({ params }: { params: Promise<{ id: stri
     } finally {
       setLoading(false)
     }
-  }
+  }, [id])
+
+  useEffect(() => {
+    fetchBedrijf()
+  }, [fetchBedrijf])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target

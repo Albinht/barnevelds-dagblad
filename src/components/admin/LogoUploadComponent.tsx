@@ -39,7 +39,7 @@ export default function LogoUploadComponent({
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       handleFileUpload(e.dataTransfer.files[0])
     }
-  }, [])
+  }, [handleFileUpload])
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -47,7 +47,7 @@ export default function LogoUploadComponent({
     }
   }
 
-  const handleFileUpload = async (file: File) => {
+  const handleFileUpload = useCallback(async (file: File) => {
     setIsUploading(true)
     setUploadError(null)
 
@@ -98,7 +98,7 @@ export default function LogoUploadComponent({
     } finally {
       setIsUploading(false)
     }
-  }
+  }, [onLogoChange])
 
   const displayLogo = previewUrl || currentLogo
 

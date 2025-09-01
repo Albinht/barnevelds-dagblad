@@ -60,7 +60,7 @@ export default function CategoryContentWrapper({
       {/* No More Articles Message */}
       {showLoadMore && !currentHasMore && displayedArticles.length > initialArticles.length && (
         <div className="mt-12 text-center text-gray-600">
-          <p>Je hebt alle artikelen in de categorie "{category}" bekeken.</p>
+          <p>Je hebt alle artikelen in de categorie &quot;{category}&quot; bekeken.</p>
         </div>
       )}
     </>

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, use } from 'react'
+import { useState, useEffect, use, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 
@@ -47,11 +47,7 @@ export default function EditArticlePage({ params }: EditArticlePageProps) {
     slug: ''
   })
 
-  useEffect(() => {
-    fetchArticle()
-  }, [id])
-
-  const fetchArticle = async () => {
+  const fetchArticle = useCallback(async () => {
     try {
       const response = await fetch(`/api/articles/${id}`)
       if (response.ok) {
@@ -75,12 +71,16 @@ export default function EditArticlePage({ params }: EditArticlePageProps) {
       } else {
         setError('Article not found')
       }
-    } catch (error) {
+    } catch {
       setError('Failed to load article')
     } finally {
       setLoading(false)
     }
-  }
+  }, [id])
+
+  useEffect(() => {
+    fetchArticle()
+  }, [fetchArticle])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target

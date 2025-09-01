@@ -1,13 +1,9 @@
 interface AdvertisementProps {
-  slot: string
-  width?: number
   height?: number
   className?: string
 }
 
 export default function Advertisement({ 
-  slot, 
-  width = 300, 
   height = 250, 
   className = "" 
 }: AdvertisementProps) {

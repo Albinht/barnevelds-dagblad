@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { formatDate } from '@/lib/dateUtils'
 
 interface Article {
@@ -36,7 +37,7 @@ export default function ArticleManagementPage() {
       } else {
         setError('Failed to load articles')
       }
-    } catch (error) {
+    } catch {
       setError('Network error')
     } finally {
       setLoading(false)
@@ -55,7 +56,7 @@ export default function ArticleManagementPage() {
       } else {
         setError('Failed to delete article')
       }
-    } catch (error) {
+    } catch {
       setError('Network error')
     }
   }
@@ -158,10 +159,12 @@ export default function ArticleManagementPage() {
                 <tr key={`${article.id}-${index}`} className="hover:bg-gray-50">
                   <td className="px-6 py-4">
                     <div className="flex items-center">
-                      <img
+                      <Image
                         className="h-10 w-10 rounded object-cover mr-3"
                         src={article.image}
-                        alt=""
+                        alt={article.title}
+                        width={40}
+                        height={40}
                       />
                       <div>
                         <div className="text-sm font-medium text-gray-900 line-clamp-2">

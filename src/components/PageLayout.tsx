@@ -38,8 +38,6 @@ export default function PageLayout({
   category,
   description,
   showSidebar = true,
-  pageType,
-  customSEO = {},
   className = ""
 }: PageLayoutProps) {
   return (

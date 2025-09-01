@@ -31,7 +31,7 @@ export default function LoginForm() {
         const data = await response.json()
         setError(data.error || 'Login failed')
       }
-    } catch (error) {
+    } catch {
       setError('Network error. Please try again.')
     } finally {
       setIsLoading(false)

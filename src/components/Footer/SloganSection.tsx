@@ -1,4 +1,3 @@
-import Link from 'next/link'
 import { footerContent } from '@/config/footerConfig'
 
 export default function SloganSection() {

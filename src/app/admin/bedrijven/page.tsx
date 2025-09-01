@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 
 interface Bedrijf {
   id: string
@@ -210,10 +211,12 @@ export default function BedrijvenManagePage() {
                     <td className="px-6 py-4">
                       <div className="flex items-center">
                         <div className="flex-shrink-0 h-10 w-10">
-                          <img
+                          <Image
                             className="h-10 w-10 rounded-full object-cover"
                             src={bedrijf.logo}
                             alt={bedrijf.naam}
+                            width={40}
+                            height={40}
                           />
                         </div>
                         <div className="ml-4">

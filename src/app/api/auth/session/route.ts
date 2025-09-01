@@ -16,7 +16,7 @@ export async function GET() {
       user: session 
     })
     
-  } catch (error) {
+  } catch {
     return Response.json(
       { error: 'Session check failed' },
       { status: 500 }
