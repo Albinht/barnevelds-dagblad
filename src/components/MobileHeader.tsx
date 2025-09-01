@@ -37,20 +37,26 @@ export default function MobileHeader() {
       {/* Main Mobile Header */}
       <header className="bg-brand-blue">
         <div className="container mx-auto px-4">
-          <div className={`flex items-center justify-between transition-all duration-300 ${isScrolled ? 'py-1' : 'py-2'}`}>
+          <div className={`flex items-center justify-between transition-all duration-300 ${isScrolled ? 'py-2' : 'py-3'}`}>
             {/* Logo */}
             <Link href="/" className="flex items-center">
-              <BDLogo size={isScrolled ? 35 : 40} />
+              <BDLogo size={isScrolled ? 40 : 45} />
             </Link>
             
-            {/* Center Content */}
-            <div className="flex-1 text-center px-2">
-              <h1 className={`text-white font-bold uppercase tracking-wide transition-all duration-300 ${isScrolled ? 'text-xs' : 'text-sm'}`}>
-                Barnevelds Dagblad
-              </h1>
-              <p className={`text-white/80 mt-0.5 transition-all duration-300 ${isScrolled ? 'hidden' : 'text-xs hidden sm:block'}`}>
-                Het laatste nieuws uit de regio
-              </p>
+            {/* Action Buttons */}
+            <div className="flex items-center space-x-2">
+              <Link 
+                href="/abonneren"
+                className="bg-brand-yellow text-black font-bold px-3 py-1.5 rounded text-xs uppercase hover:bg-yellow-400 transition-colors"
+              >
+                Abonneren
+              </Link>
+              <Link 
+                href="/inloggen"
+                className="bg-brand-darkred text-white font-bold px-3 py-1.5 rounded text-xs uppercase hover:bg-red-800 transition-colors"
+              >
+                Inloggen
+              </Link>
             </div>
             
             {/* Hamburger Menu Button */}
