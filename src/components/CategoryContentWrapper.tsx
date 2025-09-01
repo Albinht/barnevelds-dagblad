@@ -40,7 +40,15 @@ export default function CategoryContentWrapper({
       {/* Article Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {displayedArticles.map((article) => (
-          <ArticleCard key={article.id} article={article} />
+          <ArticleCard 
+            key={article.id}
+            title={article.title}
+            excerpt={article.excerpt}
+            imageUrl={article.image}
+            publishedAt={article.publishedAt}
+            slug={article.slug}
+            category={article.category}
+          />
         ))}
       </div>
 
