@@ -1,0 +1,166 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// User model for authentication
+model User {
+  id        String    @id @default(cuid())
+  email     String    @unique
+  username  String    @unique
+  password  String
+  role      Role      @default(EDITOR)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  articles  Article[]
+  comments  Comment[]
+  sessions  Session[]
+}
+
+enum Role {
+  ADMIN
+  EDITOR
+  MODERATOR
+}
+
+// Article model
+model Article {
+  id          String    @id @default(cuid())
+  slug        String    @unique
+  title       String
+  excerpt     String
+  summary     String
+  content     String    @db.Text
+  image       String
+  category    String
+  tags        String[]
+  premium     Boolean   @default(false)
+  featured    Boolean   @default(false)
+  published   Boolean   @default(false)
+  views       Int       @default(0)
+  publishedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  authorId    String
+  author      User      @relation(fields: [authorId], references: [id])
+  comments    Comment[]
+  media       Media[]
+  
+  @@index([slug])
+  @@index([category])
+  @@index([publishedAt])
+  @@index([featured])
+}
+
+// Comment model
+model Comment {
+  id        String   @id @default(cuid())
+  content   String   @db.Text
+  approved  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  articleId String
+  article   Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  
+  authorId  String
+  author    User     @relation(fields: [authorId], references: [id])
+  
+  parentId  String?
+  parent    Comment? @relation("CommentReplies", fields: [parentId], references: [id])
+  replies   Comment[] @relation("CommentReplies")
+  
+  @@index([articleId])
+  @@index([approved])
+}
+
+// Bedrijf (Business) model
+model Bedrijf {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  name        String
+  description String   @db.Text
+  category    String
+  logo        String?
+  website     String?
+  phone       String?
+  email       String?
+  address     String?
+  city        String?
+  featured    Boolean  @default(false)
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@index([slug])
+  @@index([category])
+  @@index([featured])
+}
+
+// Media model for article attachments
+model Media {
+  id        String   @id @default(cuid())
+  filename  String
+  url       String
+  mimetype  String
+  size      Int
+  createdAt DateTime @default(now())
+  
+  articleId String
+  article   Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  
+  @@index([articleId])
+}
+
+// Session model for authentication
+model Session {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([token])
+  @@index([userId])
+}
+
+// Newsletter subscription model
+model Newsletter {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@index([email])
+}
+
+// Advertisement model
+model Advertisement {
+  id        String   @id @default(cuid())
+  slot      String   @unique
+  title     String
+  imageUrl  String?
+  linkUrl   String?
+  script    String?  @db.Text
+  active    Boolean  @default(true)
+  startDate DateTime?
+  endDate   DateTime?
+  views     Int      @default(0)
+  clicks    Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@index([slot])
+  @@index([active])
+}
