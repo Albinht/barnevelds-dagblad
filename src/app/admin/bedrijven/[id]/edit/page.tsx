@@ -61,7 +61,7 @@ export default function EditBedrijfPage({ params }: { params: Promise<{ id: stri
     } finally {
       setLoading(false)
     }
-  }, [id])
+  }, [id, router])
 
   useEffect(() => {
     fetchBedrijf()

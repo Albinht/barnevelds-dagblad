@@ -2,15 +2,16 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getArticleById, updateArticle, deleteArticle } from '@/lib/articles'
 
 interface Params {
-  params: {
+  params: Promise<{
     id: string
-  }
+  }>
 }
 
 // GET - Get article by ID
 export async function GET(request: NextRequest, { params }: Params) {
+  const { id } = await params
   try {
-    const article = await getArticleById(params.id)
+    const article = await getArticleById(id)
     
     if (!article) {
       return NextResponse.json(
@@ -31,6 +32,7 @@ export async function GET(request: NextRequest, { params }: Params) {
 
 // PUT - Update article
 export async function PUT(request: NextRequest, { params }: Params) {
+  const { id } = await params
   try {
     // Check authentication for PUT requests
     const { getCurrentSession } = await import('@/lib/auth')
@@ -44,7 +46,7 @@ export async function PUT(request: NextRequest, { params }: Params) {
 
     const body = await request.json()
     
-    const updatedArticle = await updateArticle(params.id, body)
+    const updatedArticle = await updateArticle(id, body)
     
     if (!updatedArticle) {
       return NextResponse.json(
@@ -65,6 +67,7 @@ export async function PUT(request: NextRequest, { params }: Params) {
 
 // DELETE - Delete article
 export async function DELETE(request: NextRequest, { params }: Params) {
+  const { id } = await params
   try {
     // Check authentication for DELETE requests
     const { getCurrentSession } = await import('@/lib/auth')
@@ -76,7 +79,7 @@ export async function DELETE(request: NextRequest, { params }: Params) {
       )
     }
 
-    const success = await deleteArticle(params.id)
+    const success = await deleteArticle(id)
     
     if (!success) {
       return NextResponse.json(

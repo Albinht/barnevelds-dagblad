@@ -2,15 +2,16 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getBedrijfById, updateBedrijf, deleteBedrijf } from '@/lib/bedrijven'
 
 interface Params {
-  params: {
+  params: Promise<{
     id: string
-  }
+  }>
 }
 
 // GET - Get bedrijf by ID
 export async function GET(request: NextRequest, { params }: Params) {
+  const { id } = await params
   try {
-    const bedrijf = await getBedrijfById(params.id)
+    const bedrijf = await getBedrijfById(id)
     
     if (!bedrijf) {
       return NextResponse.json(
@@ -31,6 +32,7 @@ export async function GET(request: NextRequest, { params }: Params) {
 
 // PUT - Update bedrijf
 export async function PUT(request: NextRequest, { params }: Params) {
+  const { id } = await params
   try {
     // Check authentication for PUT requests
     const { getCurrentSession } = await import('@/lib/auth')
@@ -44,7 +46,7 @@ export async function PUT(request: NextRequest, { params }: Params) {
 
     const body = await request.json()
     
-    const updatedBedrijf = await updateBedrijf(params.id, body)
+    const updatedBedrijf = await updateBedrijf(id, body)
     
     if (!updatedBedrijf) {
       return NextResponse.json(
@@ -65,6 +67,7 @@ export async function PUT(request: NextRequest, { params }: Params) {
 
 // DELETE - Delete bedrijf
 export async function DELETE(request: NextRequest, { params }: Params) {
+  const { id } = await params
   try {
     // Check authentication for DELETE requests
     const { getCurrentSession } = await import('@/lib/auth')
@@ -76,7 +79,7 @@ export async function DELETE(request: NextRequest, { params }: Params) {
       )
     }
 
-    const success = await deleteBedrijf(params.id)
+    const success = await deleteBedrijf(id)
     
     if (!success) {
       return NextResponse.json(
