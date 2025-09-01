@@ -17,17 +17,6 @@ export default function HeaderContainer() {
         />
       </Link>
       
-      {/* Mobile Logo - properly positioned */}
-      <Link href="/" className="lg:hidden absolute top-4 left-3 z-50">
-        <BDLogo 
-          size={45} 
-          isOverlay={true}
-        />
-      </Link>
-      
-      {/* Mobile Navigation */}
-      <MobileNavigation />
-      
       {/* Desktop Header sections */}
       <div className="hidden lg:block">
         <UtilityBar />
@@ -35,7 +24,7 @@ export default function HeaderContainer() {
         <SubNavigation />
       </div>
       
-      {/* Mobile Header */}
+      {/* Mobile Header - Sticky with integrated hamburger */}
       <MobileHeader />
     </div>
   )

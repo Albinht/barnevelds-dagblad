@@ -36,10 +36,10 @@ export default function MobileNavigation() {
 
   return (
     <>
-      {/* Hamburger Button */}
+      {/* Hamburger Button - Now positioned in the header, not floating */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="lg:hidden fixed top-2 right-3 z-[60] p-2 rounded-lg bg-brand-blue/90 backdrop-blur-sm text-white shadow-lg"
+        className="lg:hidden relative z-[60] p-2 text-white"
         aria-label="Toggle navigation menu"
       >
         <div className="w-6 h-6 flex flex-col justify-center space-y-1.5">
@@ -51,7 +51,7 @@ export default function MobileNavigation() {
 
       {/* Mobile Menu Overlay */}
       <div
-        className={`lg:hidden fixed inset-0 bg-black/50 z-[55] transition-opacity duration-300 ${
+        className={`lg:hidden fixed inset-0 bg-black/50 z-[100] transition-opacity duration-300 ${
           isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
         }`}
         onClick={() => setIsOpen(false)}
@@ -59,7 +59,7 @@ export default function MobileNavigation() {
 
       {/* Mobile Menu Drawer */}
       <div
-        className={`lg:hidden fixed top-0 right-0 w-[85%] max-w-sm h-full bg-white z-[58] transform transition-transform duration-300 overflow-y-auto ${
+        className={`lg:hidden fixed top-0 right-0 w-[85%] max-w-sm h-full bg-white z-[101] transform transition-transform duration-300 overflow-y-auto ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >

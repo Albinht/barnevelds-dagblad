@@ -1,4 +1,6 @@
 import Link from 'next/link'
+import MobileNavigation from './MobileNavigation'
+import BDLogo from './BDLogo'
 
 export default function MobileHeader() {
   const currentDate = new Date().toLocaleDateString('nl-NL', {
@@ -9,7 +11,7 @@ export default function MobileHeader() {
   })
 
   return (
-    <div className="lg:hidden">
+    <div className="lg:hidden sticky top-0 z-50 bg-white shadow-md">
       {/* Top Bar with Date */}
       <div className="bg-gray-100 px-4 py-1 text-center">
         <p className="text-xs text-gray-600">{currentDate}</p>
@@ -18,22 +20,24 @@ export default function MobileHeader() {
       {/* Main Mobile Header */}
       <header className="bg-brand-blue">
         <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between py-3">
-            {/* Logo Space (actual logo is positioned absolutely) */}
-            <div className="w-14"></div>
+          <div className="flex items-center justify-between py-2">
+            {/* Logo */}
+            <Link href="/" className="flex items-center">
+              <BDLogo size={40} />
+            </Link>
             
             {/* Center Content */}
-            <div className="flex-1 text-center">
+            <div className="flex-1 text-center px-2">
               <h1 className="text-white font-bold text-sm uppercase tracking-wide">
                 Barnevelds Dagblad
               </h1>
-              <p className="text-white/80 text-xs mt-0.5">
+              <p className="text-white/80 text-xs mt-0.5 hidden sm:block">
                 Het laatste nieuws uit de regio
               </p>
             </div>
             
-            {/* Hamburger Space */}
-            <div className="w-14"></div>
+            {/* Hamburger Menu Button */}
+            <MobileNavigation />
           </div>
         </div>
       </header>
