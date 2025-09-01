@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { isAuthenticated } from '@/lib/auth'
+import { Prisma } from '@prisma/client'
 
 // GET all bedrijven with pagination and filtering
 export async function GET(request: Request) {
@@ -15,8 +16,8 @@ export async function GET(request: Request) {
     
     const skip = (page - 1) * limit
     
-    // Build where clause
-    const where: any = {}
+    // Build where clause with proper typing
+    const where: Prisma.BedrijfWhereInput = {}
     if (category) where.category = category
     if (featured !== null) where.featured = featured === 'true'
     if (active !== null) where.active = active === 'true'

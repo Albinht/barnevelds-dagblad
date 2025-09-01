@@ -5,7 +5,6 @@ import type { AuthUser, JWTPayload } from '@/types/auth'
 import { prisma } from '@/lib/prisma'
 
 const JWT_SECRET = process.env.JWT_SECRET!
-const NEXTAUTH_SECRET = process.env.NEXTAUTH_SECRET!
 const ADMIN_USERNAME = process.env.ADMIN_USERNAME!
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD!
 
