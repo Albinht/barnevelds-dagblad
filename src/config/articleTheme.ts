@@ -153,7 +153,8 @@ export const articleTheme = {
 // Helper functions for theme usage
 export const getColor = (colorPath: string) => {
   const keys = colorPath.split('.')
-  let value: Record<string, unknown> = articleTheme.colors
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let value: any = articleTheme.colors
   
   for (const key of keys) {
     value = value?.[key]
