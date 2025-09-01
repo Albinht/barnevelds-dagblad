@@ -1,0 +1,28 @@
+[
+  {
+    "naam": "Bia-Finance",
+    "beschrijving": "Jouw Administratie partner in Barneveld - Maak vrijblijvend kennis met Kadir!",
+    "categorie": "Dienstverlening",
+    "adres": "Nairacstraat 11A, 3771 AW Barneveld",
+    "telefoon": "0634690986",
+    "website": "https://bia-finance.nl/",
+    "logo": "/uploads/logos/logo-1756758498287-595hyz.webp",
+    "featured": true,
+    "label": "PREMIUM",
+    "id": "e7c7ff1e-508c-49eb-a4a9-3f3edd5dcc32",
+    "timestamp": "2025-09-01T20:26:46.686Z"
+  },
+  {
+    "naam": "PBM Partner",
+    "beschrijving": "Jouw partner in bedrijfskleding",
+    "categorie": "Dienstverlening",
+    "adres": "Van Heuvenlaan 3",
+    "website": "https://pbmpartner.nl/",
+    "logo": "/uploads/logos/logo-1756757353013-e2lhwy.jpg",
+    "featured": true,
+    "label": "PREMIUM",
+    "id": "9ab43347-2254-4216-b5a9-0e57f7741d20",
+    "timestamp": "2025-09-01T20:00:44.515Z",
+    "telefoon": ""
+  }
+]

@@ -1,11 +1,17 @@
 @import "tailwindcss";
 
 :root {
+  --color-yellow: #FCDD0C;
+  --color-blue: #0F47AF;
+  --color-white: #FFFFFF;
   --background: #ffffff;
   --foreground: #171717;
 }
 
 @theme inline {
+  --color-brand-yellow: var(--color-yellow);
+  --color-brand-blue: var(--color-blue);
+  --color-brand-white: var(--color-white);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
