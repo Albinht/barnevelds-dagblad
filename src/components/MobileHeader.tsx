@@ -8,8 +8,18 @@ import BDLogo from './BDLogo'
 export default function MobileHeader() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [showDate, setShowDate] = useState(true)
+  const [currentDate, setCurrentDate] = useState('')
+  const [mounted, setMounted] = useState(false)
   
   useEffect(() => {
+    setMounted(true)
+    setCurrentDate(new Date().toLocaleDateString('nl-NL', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    }))
+    
     const handleScroll = () => {
       const scrolled = window.scrollY > 10
       setIsScrolled(scrolled)
@@ -20,27 +30,20 @@ export default function MobileHeader() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  const currentDate = new Date().toLocaleDateString('nl-NL', {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  })
-
   return (
-    <div className={`lg:hidden sticky top-0 z-50 bg-white transition-all duration-300 ${isScrolled ? 'shadow-lg' : 'shadow-md'}`}>
+    <div className={`lg:hidden sticky top-0 z-50 bg-white transition-all duration-300 ${mounted && isScrolled ? 'shadow-lg' : 'shadow-md'}`}>
       {/* Top Bar with Date - Collapsible on scroll */}
-      <div className={`bg-gray-100 px-4 text-center overflow-hidden transition-all duration-300 ${showDate ? 'py-1 max-h-10' : 'py-0 max-h-0'}`}>
-        <p className="text-xs text-gray-600">{currentDate}</p>
+      <div className={`bg-gray-100 px-4 text-center overflow-hidden transition-all duration-300 ${mounted && showDate ? 'py-1 max-h-10' : 'py-0 max-h-0'}`}>
+        <p className="text-xs text-gray-600">{mounted ? currentDate : ''}</p>
       </div>
       
       {/* Main Mobile Header */}
       <header className="bg-brand-blue">
         <div className="container mx-auto px-4">
-          <div className={`flex items-center justify-between transition-all duration-300 ${isScrolled ? 'py-2' : 'py-3'}`}>
+          <div className={`flex items-center justify-between transition-all duration-300 ${mounted && isScrolled ? 'py-2' : 'py-3'}`}>
             {/* Logo */}
             <Link href="/" className="flex items-center">
-              <BDLogo size={isScrolled ? 40 : 45} />
+              <BDLogo size={mounted && isScrolled ? 40 : 45} />
             </Link>
             
             {/* Action Buttons */}

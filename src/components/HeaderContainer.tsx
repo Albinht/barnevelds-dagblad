@@ -10,8 +10,10 @@ import MobileHeader from './MobileHeader'
 
 export default function HeaderContainer() {
   const [isScrolled, setIsScrolled] = useState(false)
+  const [mounted, setMounted] = useState(false)
   
   useEffect(() => {
+    setMounted(true)
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 100)
     }
@@ -25,7 +27,7 @@ export default function HeaderContainer() {
       {/* Desktop Header sections */}
       <div className="hidden lg:block">
         {/* Static header */}
-        <div className={`${isScrolled ? 'invisible' : 'visible'}`}>
+        <div className={mounted && isScrolled ? 'invisible' : 'visible'}>
           <UtilityBar />
           <div className="relative">
             <Link href="/" className="absolute top-5 left-8 xl:left-32 z-50 hover:scale-105 transition-transform duration-200">
@@ -37,7 +39,7 @@ export default function HeaderContainer() {
         </div>
         
         {/* Sticky header for desktop */}
-        <div className={`fixed top-0 left-0 right-0 z-50 bg-white shadow-lg transition-transform duration-300 ${isScrolled ? 'translate-y-0' : '-translate-y-full'}`}>
+        <div className={`fixed top-0 left-0 right-0 z-50 bg-white shadow-lg transition-transform duration-300 ${mounted && isScrolled ? 'translate-y-0' : '-translate-y-full'}`}>
           <div className="bg-brand-blue">
             <div className="container mx-auto px-4">
               <div className="flex items-center justify-between py-2">
