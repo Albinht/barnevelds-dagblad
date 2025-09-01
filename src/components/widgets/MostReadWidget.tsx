@@ -1,11 +1,12 @@
 import Link from 'next/link'
 import { getArticlesData } from '@/lib/serverData'
+import { Article } from '@/types/article'
 
 export default async function MostReadWidget() {
   const articles = await getArticlesData()
   // Sort by comments (proxy for "most read") and take top 5
   const mostReadArticles = articles
-    .sort((a: any, b: any) => (b.comments || 0) - (a.comments || 0))
+    .sort((a: Article, b: Article) => (b.comments || 0) - (a.comments || 0))
     .slice(0, 5)
 
   return (
