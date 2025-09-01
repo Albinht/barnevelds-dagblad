@@ -4,10 +4,11 @@ export default function Header() {
   return (
     <header className="bg-brand-blue">
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between py-3" style={{ paddingLeft: '120px' }}>
+        {/* Desktop Navigation */}
+        <div className="hidden lg:flex items-center justify-between py-3 lg:pl-32">
           {/* Main Navigation */}
           <nav className="flex items-center flex-1">
-            <ul className="flex items-center space-x-8 font-newspaper font-bold uppercase text-white tracking-newspaper text-sm">
+            <ul className="flex items-center space-x-4 xl:space-x-8 font-newspaper font-bold uppercase text-white tracking-newspaper text-sm">
               <li>
                 <Link href="/" className="hover:text-brand-yellow transition-colors">
                   NIEUWS
@@ -67,6 +68,13 @@ export default function Header() {
             >
               Inloggen
             </Link>
+          </div>
+        </div>
+
+        {/* Mobile Header - Simplified */}
+        <div className="lg:hidden flex items-center justify-between py-3">
+          <div className="text-white font-bold text-lg uppercase tracking-wider">
+            Menu
           </div>
         </div>
       </div>

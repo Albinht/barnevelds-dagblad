@@ -3,8 +3,8 @@ import { footerContent } from '@/config/footerConfig'
 export default function SloganSection() {
   return (
     <section className="bg-white py-6">
-      <div className="container mx-auto px-4 text-left" style={{paddingLeft: '120px'}}>
-        <h2 className="text-3xl lg:text-4xl font-bold text-black font-newspaper mb-4">
+      <div className="container mx-auto px-4 text-center lg:text-left lg:pl-32">
+        <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-black font-newspaper mb-4">
           {footerContent.slogan.main}
         </h2>
         <a

@@ -21,10 +21,10 @@ export default function ArticleLayout({ article, children, featuredBedrijven = [
   const publishTime = formatTime(article.publishedAt || article.timestamp)
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-7xl">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+    <div className="container mx-auto px-4 py-4 md:py-8 max-w-7xl">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-8">
           
-          {/* Article Content - Left Column */}
+          {/* Article Content - Full width on mobile, left column on desktop */}
           <article className="lg:col-span-8 bg-white rounded-lg shadow-sm overflow-hidden">
             
             {/* Hero Image */}
@@ -42,7 +42,7 @@ export default function ArticleLayout({ article, children, featuredBedrijven = [
             )}
             
             {/* Article Header */}
-            <div className="p-6 lg:p-8">
+            <div className="p-4 md:p-6 lg:p-8">
               {/* Category Badge */}
               {article.category && (
                 <div className="mb-4">
@@ -58,19 +58,19 @@ export default function ArticleLayout({ article, children, featuredBedrijven = [
               )}
               
               {/* Article Title */}
-              <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 leading-tight mb-4">
+              <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 leading-tight mb-4">
                 {article.title}
               </h1>
               
               {/* Article Summary */}
               {article.summary && (
-                <p className="text-xl text-gray-600 leading-relaxed mb-6 font-medium">
+                <p className="text-base md:text-lg lg:text-xl text-gray-600 leading-relaxed mb-4 md:mb-6 font-medium">
                   {article.summary}
                 </p>
               )}
               
               {/* Article Metadata */}
-              <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500 mb-8 pb-6 border-b border-gray-200">
+              <div className="flex flex-wrap items-center gap-2 md:gap-4 text-xs md:text-sm text-gray-500 mb-4 md:mb-8 pb-4 md:pb-6 border-b border-gray-200">
                 <div className="flex items-center">
                   <span className="font-medium">Door {article.author}</span>
                 </div>
@@ -130,8 +130,8 @@ export default function ArticleLayout({ article, children, featuredBedrijven = [
             </div>
           </article>
           
-          {/* Sidebar - Right Column */}
-          <aside className="lg:col-span-4 space-y-6">
+          {/* Sidebar - Below article on mobile, right column on desktop */}
+          <aside className="lg:col-span-4 space-y-4 md:space-y-6">
             
             {/* Net Binnen Widget */}
             <NetBinnenWidget />

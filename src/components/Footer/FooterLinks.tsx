@@ -12,10 +12,10 @@ export default function FooterLinks() {
   }
 
   return (
-    <section className="bg-gray-50 py-12">
+    <section className="bg-gray-50 py-8 md:py-12">
       <div className="container mx-auto px-4">
         {/* Desktop Layout */}
-        <div className="hidden lg:block" style={{paddingLeft: '80px'}}>
+        <div className="hidden lg:block lg:pl-20">
           <div className="grid grid-cols-4 gap-8 mb-8">
             {footerSections.map((section, index) => (
               <div key={section.title} className={

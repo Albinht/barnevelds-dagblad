@@ -11,15 +11,15 @@ export default function NewsGrid({ articles }: NewsGridProps) {
   // Ensure we have at least 4 articles for the grid
   if (!articles || articles.length < 4) {
     return (
-      <div className="bg-gray-100 rounded-lg p-8 text-center">
-        <h3 className="text-xl font-bold text-gray-700 mb-2">Nieuws wordt geladen...</h3>
-        <p className="text-gray-600">Er zijn momenteel niet genoeg artikelen beschikbaar voor de grid.</p>
+      <div className="bg-gray-100 rounded-lg p-4 md:p-8 text-center">
+        <h3 className="text-lg md:text-xl font-bold text-gray-700 mb-2">Nieuws wordt geladen...</h3>
+        <p className="text-sm md:text-base text-gray-600">Er zijn momenteel niet genoeg artikelen beschikbaar voor de grid.</p>
       </div>
     )
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 md:grid-rows-2 gap-2 h-auto md:h-[600px]">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-2 md:grid-rows-2 h-auto md:h-[600px]">
       {/* Main Article - spans 2 columns and 2 rows (left side) */}
       <Link
         href={`/artikel/${articles[0].slug}`}
@@ -32,14 +32,14 @@ export default function NewsGrid({ articles }: NewsGridProps) {
           className="object-cover group-hover:scale-105 transition-transform duration-300"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-        <div className="absolute bottom-0 left-0 right-0 p-6">
-          <div className="text-xs text-white/80 uppercase font-semibold mb-2">
+        <div className="absolute bottom-0 left-0 right-0 p-4 md:p-6">
+          <div className="text-xs text-white/80 uppercase font-semibold mb-1 md:mb-2">
             {articles[0].category}
           </div>
-          <h2 className="text-white text-2xl font-bold leading-tight mb-2 group-hover:text-brand-yellow transition-colors">
+          <h2 className="text-white text-xl md:text-2xl font-bold leading-tight mb-2 group-hover:text-brand-yellow transition-colors">
             {articles[0].title}
           </h2>
-          <p className="text-white/90 text-sm line-clamp-2 mb-2">
+          <p className="text-white/90 text-sm line-clamp-2 mb-2 hidden md:block">
             {articles[0].summary}
           </p>
           <div className="flex items-center text-white/70 text-xs">
@@ -53,7 +53,7 @@ export default function NewsGrid({ articles }: NewsGridProps) {
       {/* Top Right Article - Premium */}
       <Link
         href={`/artikel/${articles[1].slug}`}
-        className="md:col-span-1 md:row-span-1 relative group overflow-hidden h-[200px] md:h-auto"
+        className="md:col-span-1 md:row-span-1 relative group overflow-hidden h-[250px] md:h-auto"
       >
         <Image
           src={articles[1].image}
@@ -79,7 +79,7 @@ export default function NewsGrid({ articles }: NewsGridProps) {
       {/* Middle Right Article */}
       <Link
         href={`/artikel/${articles[2].slug}`}
-        className="md:col-span-1 md:row-span-1 relative group overflow-hidden h-[200px] md:h-auto"
+        className="md:col-span-1 md:row-span-1 relative group overflow-hidden h-[250px] md:h-auto"
       >
         <Image
           src={articles[2].image}
@@ -100,7 +100,7 @@ export default function NewsGrid({ articles }: NewsGridProps) {
       {/* Bottom Right Article - Portrait style */}
       <Link
         href={`/artikel/${articles[3].slug}`}
-        className="md:col-span-1 md:row-span-1 relative group overflow-hidden h-[200px] md:h-auto"
+        className="md:col-span-1 md:row-span-1 relative group overflow-hidden h-[250px] md:h-auto"
       >
         <Image
           src={articles[3].image}

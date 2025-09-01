@@ -2,10 +2,10 @@ import Link from 'next/link'
 
 export default function SubNavigation() {
   return (
-    <div className="bg-white border-b border-gray-200">
+    <div className="hidden lg:block bg-white border-b border-gray-200">
       <div className="container mx-auto px-4">
-        <nav className="py-3" style={{ paddingLeft: '120px' }}>
-          <ul className="flex items-center space-x-8 text-sm font-newspaper">
+        <nav className="py-3 lg:pl-32 overflow-x-auto">
+          <ul className="flex items-center space-x-4 xl:space-x-8 text-sm font-newspaper whitespace-nowrap">
             <li>
               <Link href="/geldmaand" className="text-brand-blue font-bold hover:text-blue-700 transition-colors">
                 Geldmaand
