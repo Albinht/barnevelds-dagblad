@@ -2,9 +2,9 @@ import Link from 'next/link'
 
 export default function UtilityBar() {
   return (
-    <div className="bg-white border-b border-gray-200">
+    <div className="hidden lg:block bg-white border-b border-gray-200">
       <div className="container mx-auto px-4 py-2">
-        <div className="flex items-center justify-between text-sm" style={{ paddingLeft: '120px' }}>
+        <div className="flex items-center justify-between text-sm lg:pl-32">
           <div className="flex items-center space-x-6">
             <Link href="/weer" className="flex items-center space-x-1 text-gray-700 hover:text-brand-blue transition-colors">
               <span>Weer de komende dagen</span>

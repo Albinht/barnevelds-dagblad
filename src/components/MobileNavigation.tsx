@@ -39,7 +39,7 @@ export default function MobileNavigation() {
       {/* Hamburger Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="lg:hidden fixed top-4 right-4 z-[60] p-2 rounded-lg bg-brand-blue text-white"
+        className="lg:hidden fixed top-2 right-3 z-[60] p-2 rounded-lg bg-brand-blue/90 backdrop-blur-sm text-white shadow-lg"
         aria-label="Toggle navigation menu"
       >
         <div className="w-6 h-6 flex flex-col justify-center space-y-1.5">

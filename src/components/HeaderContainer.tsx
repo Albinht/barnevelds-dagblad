@@ -4,6 +4,7 @@ import UtilityBar from './UtilityBar'
 import Header from './Header'
 import SubNavigation from './SubNavigation'
 import MobileNavigation from './MobileNavigation'
+import MobileHeader from './MobileHeader'
 
 export default function HeaderContainer() {
   return (
@@ -16,10 +17,10 @@ export default function HeaderContainer() {
         />
       </Link>
       
-      {/* Mobile Logo - centered and smaller */}
-      <Link href="/" className="lg:hidden absolute top-3 left-4 z-50">
+      {/* Mobile Logo - properly positioned */}
+      <Link href="/" className="lg:hidden absolute top-4 left-3 z-50">
         <BDLogo 
-          size={60} 
+          size={45} 
           isOverlay={true}
         />
       </Link>
@@ -27,10 +28,15 @@ export default function HeaderContainer() {
       {/* Mobile Navigation */}
       <MobileNavigation />
       
-      {/* Header sections with proper spacing for logo */}
-      <UtilityBar />
-      <Header />
-      <SubNavigation />
+      {/* Desktop Header sections */}
+      <div className="hidden lg:block">
+        <UtilityBar />
+        <Header />
+        <SubNavigation />
+      </div>
+      
+      {/* Mobile Header */}
+      <MobileHeader />
     </div>
   )
 }
