@@ -86,8 +86,7 @@ Voeg een **HTTP Request** node toe voor het versturen naar je website:
 
 **Request:**
 - Method: `POST`
-- URL: `https://jouw-site.vercel.app/api/webhook/articles`
-  - Vervang `jouw-site` met je werkelijke domein
+- URL: `https://barneveldsdagblad.nl/api/webhook/articles`
 
 **Headers:**
 ```json
@@ -168,7 +167,7 @@ Je webhook verwacht de volgende velden:
 
 Open in browser of Postman:
 ```
-GET https://jouw-site.vercel.app/api/webhook/articles
+GET https://barneveldsdagblad.nl/api/webhook/articles
 ```
 
 Dit geeft info over de webhook zonder authenticatie.
@@ -176,14 +175,14 @@ Dit geeft info over de webhook zonder authenticatie.
 ### B. Test met API key
 
 ```bash
-curl -X GET https://jouw-site.vercel.app/api/webhook/articles \
+curl -X GET https://barneveldsdagblad.nl/api/webhook/articles \
   -H "X-API-Key: jouw-webhook-secret"
 ```
 
 ### C. Test artikel publicatie
 
 ```bash
-curl -X POST https://jouw-site.vercel.app/api/webhook/articles \
+curl -X POST https://barneveldsdagblad.nl/api/webhook/articles \
   -H "Content-Type: application/json" \
   -H "X-API-Key: jouw-webhook-secret" \
   -d '{
@@ -310,7 +309,7 @@ Je kunt deze workflow importeren in n8n als startpunt:
       "position": [850, 300],
       "parameters": {
         "method": "POST",
-        "url": "https://your-site.vercel.app/api/webhook/articles",
+        "url": "https://barneveldsdagblad.nl/api/webhook/articles",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -339,7 +338,7 @@ Je kunt deze workflow importeren in n8n als startpunt:
 
 1. **Test Endpoint:** Er is ook een test endpoint beschikbaar:
    ```
-   GET https://jouw-site.vercel.app/api/webhook/test
+   GET https://barneveldsdagblad.nl/api/webhook/test
    ```
    Deze valideert je setup zonder artikelen aan te maken.
 
