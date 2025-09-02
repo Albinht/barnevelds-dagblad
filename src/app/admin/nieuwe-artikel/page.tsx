@@ -16,6 +16,7 @@ export default function NewArticlePage() {
     image: '/barneveldsdagblad.jpeg',
     category: '',
     premium: false,
+    published: true,  // Default to published
     publishedAt: new Date().toISOString().split('T')[0],
     tags: '',
     slug: ''
@@ -75,7 +76,8 @@ export default function NewArticlePage() {
     try {
       const articleData = {
         ...formData,
-        tags: formData.tags.split(',').map(tag => tag.trim()).filter(tag => tag)
+        tags: formData.tags.split(',').map(tag => tag.trim()).filter(tag => tag),
+        published: formData.published  // Include published status
       }
 
       const response = await fetch('/api/admin/articles', {
@@ -307,18 +309,34 @@ export default function NewArticlePage() {
           />
         </div>
 
-        <div className="flex items-center">
-          <input
-            type="checkbox"
-            id="premium"
-            name="premium"
-            checked={formData.premium}
-            onChange={handleChange}
-            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-          />
-          <label htmlFor="premium" className="ml-2 block text-sm text-gray-900">
-            Premium artikel
-          </label>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="flex items-center">
+            <input
+              type="checkbox"
+              id="premium"
+              name="premium"
+              checked={formData.premium}
+              onChange={handleChange}
+              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+            />
+            <label htmlFor="premium" className="ml-2 block text-sm text-gray-900">
+              Premium artikel
+            </label>
+          </div>
+          
+          <div className="flex items-center">
+            <input
+              type="checkbox"
+              id="published"
+              name="published"
+              checked={formData.published}
+              onChange={handleChange}
+              className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+            />
+            <label htmlFor="published" className="ml-2 block text-sm text-gray-900">
+              Direct publiceren
+            </label>
+          </div>
         </div>
 
         <div className="flex justify-between pt-6">

@@ -54,7 +54,7 @@ export default function NewsletterSignup() {
           style={{width: '105px', height: '105px'}}
         >
           <Image
-            src="/barneveldsdagblad logo.png"
+            src="/Barneveldsdagblad logo.png"
             alt="Barnevelds Dagblad Logo"
             width={97}
             height={97}
