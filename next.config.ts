@@ -21,6 +21,17 @@ const nextConfig: NextConfig = {
         hostname: 'barneveldsdagblad.nl',
         pathname: '/**',
       },
+      // Vercel Blob Storage
+      {
+        protocol: 'https',
+        hostname: '*.blob.vercel-storage.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: '*.public.blob.vercel-storage.com',
+        pathname: '/**',
+      },
       // Trusted CDNs and image services (add only as needed)
       // Example:
       // {
