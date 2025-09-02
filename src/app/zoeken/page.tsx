@@ -4,7 +4,7 @@ import MostReadWidget from '@/components/widgets/MostReadWidget'
 import Advertisement from '@/components/widgets/Advertisement'
 
 interface SearchPageProps {
-  searchParams: { q?: string }
+  searchParams: Promise<{ q?: string }>
 }
 
 export default async function SearchPage({ searchParams }: SearchPageProps) {
