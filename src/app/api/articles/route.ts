@@ -4,39 +4,39 @@ import { getAllArticles, createArticle, getOrCreateUser } from '@/lib/articles-d
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/nextauth'
 
-// GET - Get all articles (with database fallback)
+// GET - Get all articles (database only, with connection error fallback)
 export async function GET() {
   try {
     // Try to get articles from database first
     try {
       const dbArticles = await getAllArticles()
-      if (dbArticles && dbArticles.length > 0) {
-        // Transform database articles to match frontend format
-        const transformedArticles = dbArticles.map(article => ({
-          id: article.id,
-          slug: article.slug,
-          title: article.title,
-          excerpt: article.excerpt,
-          summary: article.summary,
-          content: article.content,
-          image: article.image,
-          category: article.category,
-          tags: article.tags,
-          premium: article.premium,
-          author: article.author.username || article.author.email,
-          publishedAt: article.publishedAt?.toISOString().split('T')[0] || '',
-          comments: 0,
-          timestamp: article.createdAt.toISOString()
-        }))
-        return NextResponse.json(transformedArticles)
-      }
+      // Always return database result, even if empty
+      // This ensures deleted articles stay deleted
+      const transformedArticles = (dbArticles || []).map(article => ({
+        id: article.id,
+        slug: article.slug,
+        title: article.title,
+        excerpt: article.excerpt,
+        summary: article.summary,
+        content: article.content,
+        image: article.image,
+        category: article.category,
+        tags: article.tags,
+        premium: article.premium,
+        author: article.author.username || article.author.email,
+        publishedAt: article.publishedAt?.toISOString().split('T')[0] || '',
+        comments: 0,
+        timestamp: article.createdAt.toISOString()
+      }))
+      return NextResponse.json(transformedArticles)
     } catch (dbError) {
-      console.log('Database unavailable, falling back to JSON files')
+      // Only fall back to JSON if database CONNECTION fails
+      // Not when database is simply empty
+      console.error('Database connection failed:', dbError)
+      console.log('Falling back to JSON files due to connection error')
+      const articles = await getArticles()
+      return NextResponse.json(articles)
     }
-    
-    // Fallback to JSON files if database is unavailable
-    const articles = await getArticles()
-    return NextResponse.json(articles)
   } catch (error) {
     console.error('Error fetching articles:', error)
     return NextResponse.json(

@@ -7,6 +7,12 @@ export interface PartnerLogo {
 
 export const partnerLogos: PartnerLogo[] = [
   {
+    name: "Barnevelds Dagblad",
+    logo: "/Barneveldsdagblad logo.png",
+    href: "https://www.barneveldsdagblad.nl",
+    alt: "Barnevelds Dagblad logo"
+  },
+  {
     name: "Gemeente Barneveld", 
     logo: "/assets/partners/gemeente-barneveld.png",
     href: "https://barneveld.nl",

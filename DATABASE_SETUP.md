@@ -1,119 +1,177 @@
-# Database Setup Instructions
+# Database Setup - Prisma Postgres
 
-## Prerequisites
+## Quick Start with Prisma Postgres
 
-You need PostgreSQL installed on your system. Choose one of the following options:
+This project uses Prisma Postgres for database management. Follow these steps to set up your database:
 
-### Option 1: Local PostgreSQL
-- Install PostgreSQL locally: https://www.postgresql.org/download/
-- Create a database named `barnevelds_dagblad`
+## 1. Generate a Starter Project (Optional)
 
-### Option 2: Docker PostgreSQL
+If you're starting fresh, you can scaffold a new project with Prisma pre-configured:
+
 ```bash
-docker run --name barnevelds-db \
-  -e POSTGRES_USER=postgres \
-  -e POSTGRES_PASSWORD=postgres \
-  -e POSTGRES_DB=barnevelds_dagblad \
-  -p 5432:5432 \
-  -d postgres:16
+$ npx try-prisma@latest \
+    --template databases/prisma-postgres \
+    --name hello-prisma \
+    --install npm
 ```
 
-### Option 3: Cloud PostgreSQL
-- Use a service like Supabase, Neon, or Railway
-- Create a new PostgreSQL database
-- Copy the connection string
+## 2. Configure Your Database Access
 
-## Setup Steps
-
-### 1. Configure Database Connection
-
-Update the `DATABASE_URL` in your `.env.local` file:
+Add the following environment variables to your project's `.env` file (create one at the root if it doesn't exist):
 
 ```env
-# For local PostgreSQL
-DATABASE_URL="postgresql://postgres:password@localhost:5432/barnevelds_dagblad?schema=public"
+# Prisma Postgres Database URL
+# Get this from your Prisma Cloud dashboard
+DATABASE_URL="postgresql://user:password@host:5432/database?schema=public"
 
-# For Docker
-DATABASE_URL="postgresql://postgres:postgres@localhost:5432/barnevelds_dagblad?schema=public"
-
-# For cloud services (example)
-DATABASE_URL="postgresql://user:password@host.region.provider.com:5432/database?schema=public"
+# For Prisma Accelerate (recommended for production):
+DATABASE_URL="prisma+postgres://accelerate.prisma-data.net/?api_key=YOUR_API_KEY"
 ```
 
-### 2. Run Database Migrations
+### Getting Your Database Credentials:
+
+1. Go to [Prisma Cloud](https://console.prisma.io/)
+2. Create a new project or select existing
+3. Click "Generate database credentials"
+4. Copy the DATABASE_URL and add to your `.env` file
+
+## 3. Run Your First Migration
+
+Change into your project folder and create your initial database schema:
 
 ```bash
-# Generate Prisma client
-npm run db:generate
-
-# Push schema to database (for development)
-npm run db:push
-
-# OR run migrations (for production)
-npm run db:migrate
+$ cd barnevelds-dagblad
+$ npx prisma migrate dev --name init
 ```
 
-### 3. Seed the Database
+## 4. Query Your Database
+
+Test your database connection by running sample queries:
+
+```bash
+$ npm run queries
+```
+
+Or use Prisma Studio for a visual interface:
+
+```bash
+$ npm run db:studio
+```
+
+## 5. Seed the Database
+
+Add initial data to your database:
 
 ```bash
 # Seed with sample data
-npm run db:seed
+$ npm run db:seed
 ```
 
 This will create:
-- Admin user (username: `editor`, password: `admin123`)
-- Editor user (username: `redacteur`, password: `editor123`)
-- Sample articles from existing data
-- Sample bedrijven (businesses)
-- Sample comments
-- Newsletter subscriptions
-- Advertisement slots
+- Admin users with proper authentication
+- Sample articles (if needed)
+- Business listings
+- Initial configuration
 
-### 4. View Database (Optional)
+## 6. Connect with 3rd Party Database Editors
+
+You can connect to your Prisma Postgres instance using third-party database editors like:
+- pgAdmin
+- TablePlus
+- Postico
+- DBeaver
+
+Use the `@prisma/ppg-tunnel` package for secure connections:
 
 ```bash
-# Open Prisma Studio to view/edit data
+$ npm install -D @prisma/ppg-tunnel
+$ npx ppg-tunnel --url $DATABASE_URL
+```
+
+Check [Prisma docs](https://www.prisma.io/docs/orm/tools/ppg-tunnel) for more information.
+
+## Environment Variables for Production (Vercel)
+
+Set these environment variables in your Vercel dashboard:
+
+```env
+# Required
+DATABASE_URL=your_prisma_postgres_url_here
+NEXTAUTH_URL=https://www.barneveldsdagblad.nl
+NEXTAUTH_SECRET=generate_with_openssl_rand_base64_32
+GOOGLE_CLIENT_ID=your_google_client_id
+GOOGLE_CLIENT_SECRET=your_google_client_secret
+
+# Optional but recommended
+DATABASE_POOL_SIZE=10
+DATABASE_CONNECTION_TIMEOUT=30000
+```
+
+## Database Commands
+
+```bash
+# Generate Prisma Client
+npm run db:generate
+
+# Create migrations
+npm run db:migrate
+
+# Push schema changes (development)
+npm run db:push
+
+# Seed database
+npm run db:seed
+
+# Open Prisma Studio
 npm run db:studio
 ```
 
-## Available Commands
+## Current Database Schema
 
-- `npm run db:generate` - Generate Prisma client
-- `npm run db:migrate` - Run migrations
-- `npm run db:push` - Push schema changes (development)
-- `npm run db:seed` - Seed database with sample data
-- `npm run db:studio` - Open Prisma Studio GUI
+The database includes these models:
+- **User** - Admin and editor accounts
+- **Article** - News articles with full content
+- **Bedrijf** - Business listings
+- **Comment** - Article comments
+- **Media** - Image and file attachments
+- **NewsletterSubscriber** - Email subscriptions
+- **Category** - Article categories
+- **Tag** - Article tags
+- **Advertisement** - Ad placements
 
 ## Troubleshooting
 
-### Connection Refused Error
-- Ensure PostgreSQL is running
-- Check if the port 5432 is available
-- Verify credentials in DATABASE_URL
+### Connection Issues
+- Ensure DATABASE_URL is correctly set in `.env`
+- Check if your IP is whitelisted in Prisma Cloud
+- Verify the database is active in Prisma Cloud dashboard
 
-### Migration Errors
-- Drop and recreate the database if schema conflicts occur
-- Run `npx prisma migrate reset` to reset everything
+### Migration Issues
+- Run `npx prisma generate` after schema changes
+- Use `npx prisma db push` for development
+- Use `npx prisma migrate deploy` for production
 
-### Authentication Issues
-- The app will work with or without database
-- Falls back to hardcoded credentials if database is unavailable
-- Default login: `editor` / `admin123`
+### Performance
+- Enable connection pooling for production
+- Use Prisma Accelerate for edge caching
+- Monitor query performance in Prisma Studio
 
-## Production Deployment
+## Important Notes
 
-For production deployment:
+### Article Fallback Behavior
+- The system now prioritizes database content
+- JSON files are ONLY used if database connection fails
+- Deleted articles will stay deleted (no JSON fallback for empty DB)
+- This ensures data consistency
 
-1. Use a production PostgreSQL database (e.g., Supabase, Neon, Railway)
-2. Update DATABASE_URL in your production environment variables
-3. Run migrations: `npx prisma migrate deploy`
-4. Optionally seed initial data
+### Authentication
+- Uses NextAuth with Google OAuth
+- Whitelisted emails only can access admin
+- Database stores user sessions
 
-## Next Steps
+## Support
 
-After setting up the database:
-
-1. The existing authentication will now check the database first
-2. You can create new users through the database
-3. Articles and bedrijven can be managed through the admin API
-4. All data will persist in the database instead of static files
+- [Prisma Documentation](https://www.prisma.io/docs)
+- [Prisma Discord](https://discord.gg/prisma)
+- [GitHub Issues](https://github.com/prisma/prisma/issues)
+- [Vercel Deployment Guide](https://vercel.com/docs/storage/vercel-postgres)
