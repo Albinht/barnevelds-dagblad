@@ -1,16 +1,37 @@
 import NewsHomepage from '@/components/NewsHomepage'
-import { getArticles } from '@/lib/articles'
+import { getAllArticles } from '@/lib/articles-db'
 import { getFeaturedBedrijven } from '@/lib/bedrijven'
+import { getArticles } from '@/lib/articles'
 
 export default async function Home() {
   try {
-    const [articles, bedrijven] = await Promise.allSettled([
-      getArticles(),
-      getFeaturedBedrijven()
-    ])
+    // Try to get articles from database first
+    let articleData = []
+    try {
+      const dbArticles = await getAllArticles()
+      articleData = dbArticles.map(article => ({
+        id: article.id,
+        slug: article.slug,
+        title: article.title,
+        excerpt: article.excerpt,
+        summary: article.summary,
+        content: article.content,
+        image: article.image,
+        category: article.category,
+        tags: article.tags,
+        premium: article.premium,
+        author: article.author.username || article.author.email,
+        publishedAt: article.publishedAt?.toISOString().split('T')[0] || '',
+        comments: 0,
+        timestamp: article.createdAt.toISOString()
+      }))
+    } catch (dbError) {
+      console.error('Database error, falling back to JSON:', dbError)
+      // Fall back to JSON if database fails
+      articleData = await getArticles()
+    }
     
-    const articleData = articles.status === 'fulfilled' ? articles.value : []
-    const bedrijvenData = bedrijven.status === 'fulfilled' ? bedrijven.value : []
+    const bedrijvenData = await getFeaturedBedrijven().catch(() => [])
     
     return <NewsHomepage articles={articleData} bedrijven={bedrijvenData} />
   } catch (error) {
