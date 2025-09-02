@@ -96,8 +96,9 @@ export default function MobileSearch() {
                 <button
                   key={term}
                   onClick={() => {
-                    setSearchQuery(term)
-                    handleSearch(new Event('submit') as SubmitEvent)
+                    router.push(`/zoeken?q=${encodeURIComponent(term)}`)
+                    setIsOpen(false)
+                    setSearchQuery('')
                   }}
                   className="px-3 py-1 bg-gray-100 text-sm text-gray-700 rounded-full hover:bg-gray-200 transition-colors"
                 >
