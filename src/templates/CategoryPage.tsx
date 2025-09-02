@@ -44,18 +44,18 @@ export default async function CategoryPage({
 
   return (
     <div className="bg-white">
-      <div className="container mx-auto px-4" style={{paddingLeft: '80px'}}>
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 py-8">
+      <div className="container mx-auto px-4 lg:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 lg:gap-8 py-4 lg:py-8">
           {/* Main Content */}
           <div className="lg:col-span-3">
-            <div className="mb-8">
-              <h1 className="text-4xl font-bold text-brand-blue font-newspaper mb-2">
+            <div className="mb-6 lg:mb-8">
+              <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-brand-blue font-newspaper mb-2">
                 {category}
               </h1>
-              <p className="text-gray-600 text-lg">
+              <p className="text-gray-600 text-base lg:text-lg">
                 {description}
               </p>
-              <div className="w-16 h-1 bg-brand-yellow mt-4"></div>
+              <div className="w-16 h-1 bg-brand-yellow mt-3 lg:mt-4"></div>
             </div>
             {/* Hero Article */}
             {heroArticle && (
@@ -167,8 +167,10 @@ export default async function CategoryPage({
             />
           </div>
           
-          {/* Sidebar */}
-          <SidebarContent />
+          {/* Sidebar - Hidden on mobile, shown on desktop */}
+          <div className="hidden lg:block">
+            <SidebarContent />
+          </div>
         </div>
       </div>
     </div>

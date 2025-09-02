@@ -21,8 +21,8 @@ export default function MainArticleCard({ article }: MainArticleCardProps) {
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
         
         {/* Content overlay */}
-        <div className="absolute inset-0 flex flex-col justify-end p-6">
-          <h2 className="text-white text-2xl font-bold leading-tight mb-2 group-hover:text-brand-yellow transition-colors">
+        <div className="absolute inset-0 flex flex-col justify-end p-4 md:p-6">
+          <h2 className="text-white text-xl md:text-2xl font-bold leading-tight mb-2 group-hover:text-brand-yellow transition-colors">
             {article.title}
           </h2>
           <p className="text-white/90 text-sm line-clamp-2 mb-2">

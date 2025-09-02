@@ -71,9 +71,9 @@ export default async function Page112Meldingen() {
   })
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-7xl">
+    <div className="container mx-auto px-4 lg:px-8 py-4 lg:py-8 max-w-7xl">
       {/* Page Header */}
-      <div className="mb-8 text-center">
+      <div className="mb-6 lg:mb-8 text-center">
         <div className="flex items-center justify-center mb-4">
           <div className="bg-red-600 text-white px-4 py-2 rounded-lg flex items-center">
             <svg className="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20">
@@ -82,8 +82,8 @@ export default async function Page112Meldingen() {
             <span className="font-bold text-lg">112</span>
           </div>
         </div>
-        <h1 className="text-4xl font-bold text-gray-900 mb-4">112 Meldingen</h1>
-        <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+        <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-3 lg:mb-4">112 Meldingen</h1>
+        <p className="text-base lg:text-xl text-gray-600 max-w-3xl mx-auto">
           Alle 112 meldingen uit Barneveld en omgeving. Van incidenten en ongevallen tot brandweer-, politie- en ambulance-inzetten.
         </p>
       </div>
