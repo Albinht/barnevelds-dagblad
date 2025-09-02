@@ -1,20 +1,15 @@
 import bcrypt from 'bcryptjs'
-import jwt from 'jsonwebtoken'
-import type { AuthUser, JWTPayload } from '@/types/auth'
+import type { AuthUser } from '@/types/auth'
 import { prisma } from '@/lib/prisma'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/nextauth'
 
-const JWT_SECRET = process.env.JWT_SECRET
 const ADMIN_USERNAME = process.env.ADMIN_USERNAME
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD
 
-if (!JWT_SECRET) {
-  throw new Error('JWT_SECRET environment variable is required')
-}
-
-if (!ADMIN_USERNAME || !ADMIN_PASSWORD) {
-  throw new Error('ADMIN_USERNAME and ADMIN_PASSWORD environment variables are required')
+// Admin credentials are optional - NextAuth handles authentication
+if (process.env.NODE_ENV === 'development' && (!ADMIN_USERNAME || !ADMIN_PASSWORD)) {
+  console.warn('ADMIN_USERNAME and ADMIN_PASSWORD not set - using NextAuth only')
 }
 
 // Validate admin credentials (for backward compatibility)
@@ -48,35 +43,16 @@ export async function validateCredentials(username: string, password: string): P
   }
 }
 
-// Generate JWT token with shorter expiry for better security
-export function generateToken(username: string, userId?: string, role: string = 'ADMIN'): string {
-  if (!JWT_SECRET) {
-    throw new Error('JWT_SECRET is not configured')
-  }
-  
-  return jwt.sign(
-    { 
-      username, 
-      userId: userId || 'dev-user', 
-      role,
-      iat: Math.floor(Date.now() / 1000)
-    },
-    JWT_SECRET,
-    { expiresIn: '24h' } // Reduced from 30d to 24h for better security
-  )
+// JWT functions are deprecated - using NextAuth for authentication
+// These functions are kept for backward compatibility but return null
+export function generateToken(_username: string, _userId?: string, _role: string = 'ADMIN'): string {
+  console.warn('generateToken is deprecated - use NextAuth for authentication')
+  return ''
 }
 
-// Verify JWT token
-export function verifyToken(token: string): JWTPayload | null {
-  if (!JWT_SECRET) {
-    return null
-  }
-  
-  try {
-    return jwt.verify(token, JWT_SECRET) as JWTPayload
-  } catch {
-    return null
-  }
+export function verifyToken(_token: string): unknown | null {
+  console.warn('verifyToken is deprecated - use NextAuth for authentication')
+  return null
 }
 
 // Get current session - now uses NextAuth
@@ -109,7 +85,8 @@ export async function hashPassword(password: string): Promise<string> {
 // Create or get admin user in database
 export async function ensureAdminUser() {
   if (!ADMIN_USERNAME || !ADMIN_PASSWORD) {
-    throw new Error('ADMIN_USERNAME and ADMIN_PASSWORD must be configured')
+    console.warn('ADMIN_USERNAME and ADMIN_PASSWORD not configured - skipping admin user creation')
+    return null
   }
   
   try {
