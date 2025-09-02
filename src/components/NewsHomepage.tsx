@@ -3,9 +3,9 @@ import RegioGrid from './RegioGrid'
 import SportGrid from './SportGrid'
 import ShowGrid from './ShowGrid'
 import KijkGrid from './KijkGrid'
-import LoginCTA from './LoginCTA'
 import SpotlightBedrijven from './SpotlightBedrijven'
 import NewsTicker from './NewsTicker'
+import Emergency112Widget from './widgets/Emergency112Widget'
 import { Article } from '@/types/article'
 import { Bedrijf } from '@/types/bedrijf'
 
@@ -75,7 +75,7 @@ export default function NewsHomepage({ articles, bedrijven }: NewsHomepageProps)
         {/* Tablet/Desktop Sidebar */}
         <div className="w-full md:w-1/3 lg:w-80 flex-shrink-0 hidden md:block">
           <div className="space-y-4 md:space-y-6">
-            <LoginCTA />
+            <Emergency112Widget />
             <SpotlightBedrijven bedrijven={bedrijven} />
             <NewsTicker articles={tickerArticles} />
           </div>
@@ -84,7 +84,7 @@ export default function NewsHomepage({ articles, bedrijven }: NewsHomepageProps)
 
       {/* Mobile Sidebar - shown below main content on mobile only */}
       <div className="md:hidden mt-6 space-y-4 w-full max-w-md mx-auto px-4">
-        <LoginCTA />
+        <Emergency112Widget />
         <SpotlightBedrijven bedrijven={bedrijven} />
         <NewsTicker articles={tickerArticles} />
       </div>
