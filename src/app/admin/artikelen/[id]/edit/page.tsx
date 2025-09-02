@@ -38,7 +38,7 @@ export default function EditArticlePage({ params }: EditArticlePageProps) {
     summary: '',
     excerpt: '',
     content: '',
-    image: '/barneveldsdagblad.jpeg',
+    image: '',
     category: '',
     premium: false,
     author: '',
@@ -60,7 +60,7 @@ export default function EditArticlePage({ params }: EditArticlePageProps) {
           summary: data.summary || '',
           excerpt: data.excerpt || '',
           content: data.content || '',
-          image: data.image || '/barneveldsdagblad.jpeg',
+          image: data.image || '',
           category: data.category || '',
           premium: data.premium || false,
           author: data.authorName || data.author?.username || data.author?.email || 'Redactie',
@@ -125,7 +125,7 @@ export default function EditArticlePage({ params }: EditArticlePageProps) {
   const resetToDefaultImage = () => {
     setFormData(prev => ({
       ...prev,
-      image: '/barneveldsdagblad.jpeg'
+      image: ''
     }))
   }
 
@@ -284,7 +284,7 @@ export default function EditArticlePage({ params }: EditArticlePageProps) {
                 className="object-cover"
                 sizes="(max-width: 768px) 100vw, 50vw"
               />
-              {formData.image !== '/barneveldsdagblad.jpeg' && (
+              {formData.image !== '' && (
                 <button
                   type="button"
                   onClick={resetToDefaultImage}

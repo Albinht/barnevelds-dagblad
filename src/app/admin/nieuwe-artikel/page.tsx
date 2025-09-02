@@ -13,7 +13,7 @@ export default function NewArticlePage() {
     summary: '',
     excerpt: '',
     content: '',
-    image: '/barneveldsdagblad.jpeg',
+    image: '',
     category: '',
     author: 'Redactie', // Default author
     premium: false,
@@ -91,7 +91,7 @@ export default function NewArticlePage() {
   const resetToDefaultImage = () => {
     setFormData(prev => ({
       ...prev,
-      image: '/barneveldsdagblad.jpeg'
+      image: ''
     }))
   }
 
@@ -211,7 +211,7 @@ export default function NewArticlePage() {
                 className="object-cover"
                 sizes="(max-width: 768px) 100vw, 50vw"
               />
-              {formData.image !== '/barneveldsdagblad.jpeg' && (
+              {formData.image !== '' && (
                 <button
                   type="button"
                   onClick={resetToDefaultImage}

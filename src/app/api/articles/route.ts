@@ -115,7 +115,7 @@ export async function POST(request: NextRequest) {
       title: body.title,
       summary: body.summary,
       excerpt: body.excerpt,
-      image: body.image || '/barneveldsdagblad.jpeg',
+      image: body.image || '',
       category: body.category,
       premium: body.premium || false,
       author: session.user.name || session.user.email,
