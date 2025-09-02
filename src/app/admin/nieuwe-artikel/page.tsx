@@ -15,6 +15,7 @@ export default function NewArticlePage() {
     content: '',
     image: '/barneveldsdagblad.jpeg',
     category: '',
+    author: 'Redactie', // Default author
     premium: false,
     published: true,  // Default to published
     publishedAt: new Date().toISOString().split('T')[0],
@@ -287,6 +288,21 @@ export default function NewArticlePage() {
             </select>
           </div>
 
+          <div>
+            <label htmlFor="author" className="block text-sm font-medium text-gray-700 mb-2">
+              Auteur *
+            </label>
+            <input
+              type="text"
+              id="author"
+              name="author"
+              value={formData.author}
+              onChange={handleChange}
+              required
+              placeholder="bijv: Redactie, Jan de Vries"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

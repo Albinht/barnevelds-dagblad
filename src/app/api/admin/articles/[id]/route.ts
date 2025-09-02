@@ -88,6 +88,7 @@ export async function PUT(request: Request, { params }: Params) {
       premium: body.premium || false,
       featured: body.featured || false,
       published: body.published !== false,
+      authorName: body.author || body.authorName, // Support custom author name
       updatedAt: new Date()
     }
     

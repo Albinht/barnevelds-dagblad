@@ -24,7 +24,7 @@ export default async function Home() {
         category: article.category,
         tags: article.tags,
         premium: article.premium,
-        author: article.author.username || article.author.email,
+        author: article.authorName || article.author.username || article.author.email,
         publishedAt: article.publishedAt?.toISOString().split('T')[0] || '',
         comments: 0,
         timestamp: article.createdAt.toISOString()

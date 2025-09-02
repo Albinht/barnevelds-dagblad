@@ -69,7 +69,8 @@ export async function GET(request: Request) {
       premium: article.premium,
       featured: article.featured,
       published: article.published,
-      author: article.author.username || article.author.email,
+      author: article.authorName || article.author.username || article.author.email,
+      authorName: article.authorName,
       publishedAt: article.publishedAt?.toISOString().split('T')[0] || '',
       comments: article._count.comments,
       timestamp: article.createdAt.toISOString()
@@ -168,6 +169,7 @@ export async function POST(request: Request) {
         featured: featured || false,
         published: published || false,
         publishedAt: published ? new Date() : null,
+        authorName: body.author || body.authorName, // Custom author name
         authorId: userId  // Use authenticated user
       },
       include: {

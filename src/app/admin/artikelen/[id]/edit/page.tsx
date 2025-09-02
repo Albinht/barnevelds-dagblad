@@ -63,7 +63,7 @@ export default function EditArticlePage({ params }: EditArticlePageProps) {
           image: data.image || '/barneveldsdagblad.jpeg',
           category: data.category || '',
           premium: data.premium || false,
-          author: data.author || '',
+          author: data.authorName || data.author?.username || data.author?.email || 'Redactie',
           publishedAt: data.publishedAt ? data.publishedAt.split('T')[0] : '',
           tags: Array.isArray(data.tags) ? data.tags.join(', ') : '',
           slug: data.slug || ''
