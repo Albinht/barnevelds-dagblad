@@ -16,16 +16,17 @@ const ADMIN_EMAIL_WHITELIST = [
 
 export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
-  debug: false, // Disable debug logging
+  debug: true, // TEMPORARY: Enable debug for troubleshooting
   logger: {
     error: (code, metadata) => {
-      // Only log actual errors, not 401 unauthorized
-      if (code !== 'CLIENT_FETCH_ERROR') {
-        console.error(code, metadata)
-      }
+      console.error('NextAuth Error:', code, metadata)
     },
-    warn: () => {},
-    debug: () => {}
+    warn: (code) => {
+      console.warn('NextAuth Warning:', code)
+    },
+    debug: (code, metadata) => {
+      console.log('NextAuth Debug:', code, metadata)
+    }
   },
   providers: [
     GoogleProvider({
@@ -34,13 +35,23 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async signIn({ user }) {
-      console.log('🔐 SignIn callback triggered for:', user.email)
+    async signIn({ user, account, profile }) {
+      console.log('🔐 SignIn callback triggered')
+      console.log('User:', user)
+      console.log('Account:', account)
+      console.log('Profile:', profile)
+      
       const email = user.email
       
-      if (!email || !ADMIN_EMAIL_WHITELIST.includes(email)) {
-        console.log('❌ Login blocked for email:', email)
-        return false
+      if (!email) {
+        console.log('❌ No email provided by Google')
+        return '/auth/error?error=NoEmail'
+      }
+      
+      if (!ADMIN_EMAIL_WHITELIST.includes(email)) {
+        console.log('❌ Login blocked - email not whitelisted:', email)
+        console.log('Whitelist:', ADMIN_EMAIL_WHITELIST)
+        return `/auth/error?error=AccessDenied&email=${encodeURIComponent(email)}`
       }
       
       console.log('✅ Login allowed for email:', email)
@@ -66,6 +77,10 @@ export const authOptions: NextAuthOptions = {
       }
       return session
     },
+  },
+  pages: {
+    signIn: '/login',
+    error: '/auth/error', // Custom error page
   },
 }
 
