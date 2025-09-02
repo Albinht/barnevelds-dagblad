@@ -38,7 +38,7 @@ export default function NewArticlePage() {
       const formData = new FormData()
       formData.append('file', file)
 
-      const response = await fetch('/api/upload', {
+      const response = await fetch('/api/admin/upload', {
         method: 'POST',
         body: formData,
       })
@@ -78,7 +78,7 @@ export default function NewArticlePage() {
         tags: formData.tags.split(',').map(tag => tag.trim()).filter(tag => tag)
       }
 
-      const response = await fetch('/api/articles', {
+      const response = await fetch('/api/admin/articles', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

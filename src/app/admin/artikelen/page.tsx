@@ -7,6 +7,7 @@ import { formatDate } from '@/lib/dateUtils'
 
 interface Article {
   id: string
+  slug: string  // Add slug for view links
   title: string
   author: string
   category: string
@@ -32,7 +33,7 @@ export default function ArticleManagementPage() {
 
   const fetchArticles = async () => {
     try {
-      const response = await fetch('/api/articles')
+      const response = await fetch('/api/admin/articles')
       if (response.ok) {
         const data = await response.json()
         setArticles(data)
@@ -303,7 +304,7 @@ export default function ArticleManagementPage() {
                         Edit
                       </Link>
                       <Link
-                        href={`/artikel/${article.id}`}
+                        href={`/artikel/${article.slug}`}
                         className="text-green-600 hover:text-green-900"
                         target="_blank"
                       >

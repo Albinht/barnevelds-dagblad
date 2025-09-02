@@ -49,7 +49,7 @@ export default function EditArticlePage({ params }: EditArticlePageProps) {
 
   const fetchArticle = useCallback(async () => {
     try {
-      const response = await fetch(`/api/articles/${id}`)
+      const response = await fetch(`/api/admin/articles/${id}`)
       if (response.ok) {
         const data = await response.json()
         setArticle(data)
@@ -99,7 +99,7 @@ export default function EditArticlePage({ params }: EditArticlePageProps) {
       const formData = new FormData()
       formData.append('file', file)
 
-      const response = await fetch('/api/upload', {
+      const response = await fetch('/api/admin/upload', {
         method: 'POST',
         body: formData,
       })
@@ -140,7 +140,7 @@ export default function EditArticlePage({ params }: EditArticlePageProps) {
         updatedAt: new Date().toISOString()
       }
 
-      const response = await fetch(`/api/articles/${id}`, {
+      const response = await fetch(`/api/admin/articles/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

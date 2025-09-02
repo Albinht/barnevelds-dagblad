@@ -1,11 +1,22 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { isAuthenticated } from '@/lib/auth'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/lib/nextauth'
+import { getOrCreateUser } from '@/lib/articles-db'
 import { Prisma } from '@prisma/client'
 
-// GET all articles with pagination and filtering
+// GET all articles for admin view (simplified for admin panel)
 export async function GET(request: Request) {
   try {
+    // Check authentication
+    const session = await getServerSession(authOptions)
+    if (!session?.user?.email) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      )
+    }
+
     const { searchParams } = new URL(request.url)
     const page = parseInt(searchParams.get('page') || '1')
     const limit = parseInt(searchParams.get('limit') || '10')
@@ -29,33 +40,41 @@ export async function GET(request: Request) {
       ]
     }
     
-    const [articles, total] = await Promise.all([
-      prisma.article.findMany({
-        where,
-        skip,
-        take: limit,
-        orderBy: { createdAt: 'desc' },
-        include: {
-          author: {
-            select: { id: true, username: true, email: true }
-          },
-          _count: {
-            select: { comments: true }
-          }
+    // For admin panel, get all articles without pagination
+    const articles = await prisma.article.findMany({
+      where,
+      orderBy: { createdAt: 'desc' },
+      include: {
+        author: {
+          select: { id: true, username: true, email: true }
+        },
+        _count: {
+          select: { comments: true }
         }
-      }),
-      prisma.article.count({ where })
-    ])
-    
-    return NextResponse.json({
-      articles,
-      pagination: {
-        page,
-        limit,
-        total,
-        totalPages: Math.ceil(total / limit)
       }
     })
+    
+    // Transform to match admin panel format - INCLUDE SLUG!
+    const transformedArticles = articles.map(article => ({
+      id: article.id,
+      slug: article.slug,  // Important for view links!
+      title: article.title,
+      excerpt: article.excerpt,
+      summary: article.summary,
+      content: article.content,
+      image: article.image,
+      category: article.category,
+      tags: article.tags,
+      premium: article.premium,
+      featured: article.featured,
+      published: article.published,
+      author: article.author.username || article.author.email,
+      publishedAt: article.publishedAt?.toISOString().split('T')[0] || '',
+      comments: article._count.comments,
+      timestamp: article.createdAt.toISOString()
+    }))
+    
+    return NextResponse.json(transformedArticles)
   } catch (error) {
     console.error('Error fetching articles:', error)
     return NextResponse.json(
@@ -67,8 +86,9 @@ export async function GET(request: Request) {
 
 // POST create new article
 export async function POST(request: Request) {
-  const isAuth = await isAuthenticated()
-  if (!isAuth) {
+  // Check authentication
+  const session = await getServerSession(authOptions)
+  if (!session?.user?.email) {
     return NextResponse.json(
       { error: 'Unauthorized' },
       { status: 401 }
@@ -92,22 +112,44 @@ export async function POST(request: Request) {
       authorId
     } = body
     
+    // Generate slug if not provided
+    const finalSlug = slug || title
+      .toLowerCase()
+      .replace(/[^a-z0-9\s-]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-')
+      .trim()
+    
     // Check if slug already exists
     const existingArticle = await prisma.article.findUnique({
-      where: { slug }
+      where: { slug: finalSlug }
     })
     
     if (existingArticle) {
+      // Add timestamp to make unique
+      const uniqueSlug = `${finalSlug}-${Date.now()}`
+      body.slug = uniqueSlug
+    } else {
+      body.slug = finalSlug
+    }
+    
+    // Get or create user
+    const userId = await getOrCreateUser(
+      session.user.email,
+      session.user.name || undefined
+    )
+    
+    if (!userId) {
       return NextResponse.json(
-        { error: 'Article with this slug already exists' },
-        { status: 400 }
+        { error: 'Failed to identify user' },
+        { status: 500 }
       )
     }
     
     const article = await prisma.article.create({
       data: {
         title,
-        slug,
+        slug: body.slug,
         excerpt,
         summary,
         content,
@@ -118,7 +160,7 @@ export async function POST(request: Request) {
         featured: featured || false,
         published: published || false,
         publishedAt: published ? new Date() : null,
-        authorId: authorId || 'dev-user' // Use default for now
+        authorId: userId  // Use authenticated user
       },
       include: {
         author: {
