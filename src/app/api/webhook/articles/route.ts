@@ -29,12 +29,31 @@ function generateSlug(title: string): string {
   return `${baseSlug}-${timestamp}`
 }
 
+// Article data interface
+interface ArticleData {
+  title: string
+  excerpt: string
+  content: string
+  category: string
+  summary?: string
+  image?: string
+  tags?: string[]
+  source?: string
+  sourceUrl?: string
+  authorName?: string
+  premium?: boolean
+  featured?: boolean
+  slug?: string
+  [key: string]: unknown // Allow indexing for validation
+}
+
 // Validate required fields
-function validateArticleData(data: any): string | null {
+function validateArticleData(data: ArticleData): string | null {
   const requiredFields = ['title', 'excerpt', 'content', 'category']
   
   for (const field of requiredFields) {
-    if (!data[field] || (typeof data[field] === 'string' && data[field].trim() === '')) {
+    const value = data[field]
+    if (!value || (typeof value === 'string' && value.trim() === '')) {
       return `Missing required field: ${field}`
     }
   }
@@ -73,7 +92,7 @@ export async function POST(request: Request) {
     let body
     try {
       body = await request.json()
-    } catch (e) {
+    } catch {
       return NextResponse.json(
         { error: 'Invalid JSON in request body' },
         { status: 400 }
@@ -122,7 +141,7 @@ export async function POST(request: Request) {
     }
     
     // 7. Prepare tags with source
-    let tags = body.tags || []
+    const tags = body.tags || []
     if (body.source && !tags.includes(body.source)) {
       tags.push(body.source)
     }

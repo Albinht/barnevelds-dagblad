@@ -103,7 +103,7 @@ export class ContentWorkflowService implements ContentWorkflow {
     from: ArticleStatus,
     to: ArticleStatus,
     userRole: UserRole,
-    userId: string
+    _userId: string
   ): Promise<{ valid: boolean; reason?: string }> {
     if (!this.canTransition(from, to, userRole)) {
       return {

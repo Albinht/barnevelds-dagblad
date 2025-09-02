@@ -32,7 +32,7 @@ export async function POST(request: Request) {
     let body
     try {
       body = await request.json()
-    } catch (e) {
+    } catch {
       return NextResponse.json(
         { 
           error: 'Invalid JSON in request body',
@@ -74,7 +74,7 @@ export async function POST(request: Request) {
           }
         })
         validationResults.duplicateCheck = !existingArticle
-      } catch (dbError) {
+      } catch {
         // Database not available (e.g., local development)
         console.log('[Webhook Test] Database check skipped - not connected')
         validationResults.duplicateCheck = true // Assume no duplicate in dev
@@ -92,7 +92,7 @@ export async function POST(request: Request) {
       validationResults.duplicateCheck
     
     // 6. Build response
-    const response = {
+    const response: Record<string, unknown> = {
       success: true,
       message: 'Webhook test completed',
       wouldCreateArticle: wouldSucceed,
@@ -155,7 +155,7 @@ export async function GET(request: Request) {
         totalArticles: articleCount,
         categoriesInUse: categoryCount.map(c => c.category)
       }
-    } catch (e) {
+    } catch {
       // Ignore database errors in test endpoint
       stats = 'Database not connected (development mode)'
     }
