@@ -1,13 +1,13 @@
 import { notFound } from 'next/navigation'
 import { Metadata } from 'next'
 import ArticleLayout from '@/components/ArticleLayout'
-import { getArticleBySlug, getAllArticles, getRelatedArticles } from '@/lib/articles-db'
+import { getArticleBySlug, getRelatedArticles } from '@/lib/articles-db'
 import { getFeaturedBedrijven } from '@/lib/bedrijven'
 
 interface ArticlePageProps {
-  params: {
+  params: Promise<{
     slug: string
-  }
+  }>
 }
 
 
