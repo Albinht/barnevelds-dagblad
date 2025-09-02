@@ -154,7 +154,7 @@ Je webhook verwacht de volgende velden:
 
 ### Optionele velden:
 - `summary` (string): Uitgebreidere samenvatting
-- `image` (string): URL naar hoofdafbeelding
+- `image` (string): URL naar hoofdafbeelding (leeg laten voor geen afbeelding)
 - `tags` (array): Lijst met tags ["tag1", "tag2"]
 - `source` (string): Bron naam (bijv. "AD.nl")
 - `sourceUrl` (string): Link naar origineel artikel

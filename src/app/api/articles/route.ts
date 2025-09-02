@@ -92,7 +92,7 @@ export async function POST(request: NextRequest) {
         excerpt: body.excerpt,
         summary: body.summary,
         content: body.content || '',
-        image: body.image || '/barneveldsdagblad.jpeg',
+        image: body.image || '',
         category: body.category,
         tags: body.tags || [],
         premium: body.premium || false,

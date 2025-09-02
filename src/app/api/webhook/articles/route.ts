@@ -167,7 +167,7 @@ export async function POST(request: Request) {
         excerpt: body.excerpt,
         summary: body.summary || body.excerpt,
         content: body.content,
-        image: body.image || '/barneveldsdagblad.jpeg',
+        image: body.image || '',
         category: body.category,
         tags,
         premium: body.premium || false,
