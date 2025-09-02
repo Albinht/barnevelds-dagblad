@@ -3,6 +3,10 @@ import { getAllArticles } from '@/lib/articles-db'
 import { getFeaturedBedrijven } from '@/lib/bedrijven'
 import { getArticles } from '@/lib/articles'
 
+// Force dynamic rendering and revalidate every 60 seconds
+export const dynamic = 'force-dynamic'
+export const revalidate = 60
+
 export default async function Home() {
   try {
     // Try to get articles from database first

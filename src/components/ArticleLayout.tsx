@@ -2,6 +2,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Article } from '@/types/article'
 import NetBinnenWidget from '@/components/widgets/NetBinnenWidget'
+import Emergency112Widget from '@/components/widgets/Emergency112Widget'
 import MostReadWidget from '@/components/widgets/MostReadWidget'
 import Advertisement from '@/components/widgets/Advertisement'
 import RelatedArticles from '@/components/widgets/RelatedArticles'
@@ -171,6 +172,9 @@ export default function ArticleLayout({ article, children, featuredBedrijven = [
           
           {/* Sidebar - Below article on mobile, 1 col on tablet, 4 cols on desktop */}
           <aside className="md:col-span-1 lg:col-span-4 space-y-4 md:space-y-6">
+            
+            {/* 112 Emergency Widget */}
+            <Emergency112Widget />
             
             {/* Net Binnen Widget */}
             <NetBinnenWidget />

@@ -4,6 +4,10 @@ import ArticleLayout from '@/components/ArticleLayout'
 import { getArticleBySlug, getRelatedArticles } from '@/lib/articles-db'
 import { getFeaturedBedrijven } from '@/lib/bedrijven'
 
+// Force dynamic rendering to ensure fresh content
+export const dynamic = 'force-dynamic'
+export const revalidate = 60
+
 interface ArticlePageProps {
   params: Promise<{
     slug: string

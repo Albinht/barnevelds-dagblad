@@ -3,10 +3,15 @@ import { getCategoryPageArticles } from '@/lib/articleFilters'
 import { getArticlesData } from '@/lib/serverData'
 import CategoryContentWrapper from '@/components/CategoryContentWrapper'
 import NetBinnenWidget from '@/components/widgets/NetBinnenWidget'
+import Emergency112Widget from '@/components/widgets/Emergency112Widget'
 import MostReadWidget from '@/components/widgets/MostReadWidget'
 import SpotlightBedrijven from '@/components/SpotlightBedrijven'
 import Advertisement from '@/components/widgets/Advertisement'
 import { getBedrijvenData } from '@/lib/serverData'
+
+// Force dynamic rendering to ensure fresh content
+export const dynamic = 'force-dynamic'
+export const revalidate = 60
 
 // Server-side sidebar component
 async function SidebarContent() {
@@ -14,6 +19,7 @@ async function SidebarContent() {
 
   return (
     <aside className="space-y-6">
+      <Emergency112Widget />
       <NetBinnenWidget />
       <MostReadWidget />
       <SpotlightBedrijven bedrijven={bedrijven} />

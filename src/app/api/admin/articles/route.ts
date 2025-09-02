@@ -4,6 +4,7 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/nextauth'
 import { getOrCreateUser } from '@/lib/articles-db'
 import { Prisma } from '@prisma/client'
+import { revalidatePath } from 'next/cache'
 
 // GET all articles for admin view (simplified for admin panel)
 export async function GET(request: Request) {
@@ -175,6 +176,11 @@ export async function POST(request: Request) {
         }
       }
     })
+    
+    // Revalidate all pages that might show this new article
+    revalidatePath('/', 'layout')
+    revalidatePath(`/${category?.toLowerCase()}`)
+    revalidatePath('/112-meldingen')
     
     return NextResponse.json(article, { status: 201 })
   } catch (error) {

@@ -6,6 +6,10 @@ import { getArticles } from '@/lib/articles'
 import { formatDate, formatTime } from '@/lib/dateUtils'
 import { Article } from '@/types/article'
 
+// Force dynamic rendering and revalidate every 60 seconds
+export const dynamic = 'force-dynamic'
+export const revalidate = 60
+
 export const metadata: Metadata = {
   title: '112 Meldingen | Barnevelds Dagblad',
   description: 'Alle 112 meldingen uit Barneveld en omgeving. Blijf op de hoogte van incidenten, ongevallen en noodmeldingen in uw regio.',

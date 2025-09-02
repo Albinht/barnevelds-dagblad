@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/nextauth'
 import { handlePutFallback, handleDeleteFallback } from './fallback-route'
+import { revalidatePath, revalidateTag } from 'next/cache'
 
 interface Params {
   params: Promise<{ id: string }>
@@ -108,6 +109,13 @@ export async function PUT(request: Request, { params }: Params) {
     })
     
     console.log('Article updated successfully')
+    
+    // Revalidate all pages that might show this article
+    revalidatePath('/', 'layout')
+    revalidatePath(`/artikel/${article.slug}`)
+    revalidatePath(`/${article.category?.toLowerCase()}`)
+    revalidatePath('/112-meldingen')
+    
     return NextResponse.json(article)
   } catch (error) {
     console.error('Error updating article - Details:', {
@@ -165,6 +173,12 @@ export async function DELETE(request: Request, { params }: Params) {
     })
     
     console.log('Article deleted successfully')
+    
+    // Revalidate all pages after deletion
+    revalidatePath('/', 'layout')
+    revalidatePath(`/${existingArticle.category?.toLowerCase()}`)
+    revalidatePath('/112-meldingen')
+    
     return NextResponse.json({ success: true })
   } catch (error) {
     console.error('Error deleting article - Details:', {
