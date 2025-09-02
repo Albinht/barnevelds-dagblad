@@ -51,7 +51,7 @@ export async function GET(request: Request) {
     }))
 
     return NextResponse.json(transformedBusinesses)
-  } catch (error) {
+  } catch {
     // Fallback to JSON file when database is unavailable
     console.log('Database unavailable, using JSON fallback for business search')
     const businesses = await getBedrijven()

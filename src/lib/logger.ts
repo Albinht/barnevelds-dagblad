@@ -2,7 +2,7 @@ export interface LogEntry {
   timestamp: string
   level: 'info' | 'warn' | 'error' | 'debug'
   message: string
-  metadata?: Record<string, any>
+  metadata?: Record<string, unknown>
   userId?: string
   action?: string
 }
@@ -10,7 +10,7 @@ export interface LogEntry {
 class Logger {
   private isDevelopment = process.env.NODE_ENV === 'development'
   
-  private formatMessage(level: string, message: string, metadata?: Record<string, any>): LogEntry {
+  private formatMessage(level: string, message: string, metadata?: Record<string, unknown>): LogEntry {
     return {
       timestamp: new Date().toISOString(),
       level: level as LogEntry['level'],
@@ -33,17 +33,17 @@ class Logger {
     }
   }
 
-  info(message: string, metadata?: Record<string, any>) {
+  info(message: string, metadata?: Record<string, unknown>) {
     const entry = this.formatMessage('info', message, metadata)
     this.output(entry)
   }
 
-  warn(message: string, metadata?: Record<string, any>) {
+  warn(message: string, metadata?: Record<string, unknown>) {
     const entry = this.formatMessage('warn', message, metadata)
     this.output(entry)
   }
 
-  error(message: string, error?: Error | any, metadata?: Record<string, any>) {
+  error(message: string, error?: Error | unknown, metadata?: Record<string, unknown>) {
     const errorMetadata = error instanceof Error 
       ? { error: error.message, stack: error.stack, ...metadata }
       : { error, ...metadata }
@@ -52,7 +52,7 @@ class Logger {
     this.output(entry)
   }
 
-  debug(message: string, metadata?: Record<string, any>) {
+  debug(message: string, metadata?: Record<string, unknown>) {
     if (this.isDevelopment) {
       const entry = this.formatMessage('debug', message, metadata)
       this.output(entry)
@@ -60,7 +60,7 @@ class Logger {
   }
 
   // Security and audit logging
-  security(action: string, userId: string, details?: Record<string, any>) {
+  security(action: string, userId: string, details?: Record<string, unknown>) {
     const entry = this.formatMessage('info', `Security: ${action}`, {
       userId,
       action,
@@ -70,7 +70,7 @@ class Logger {
   }
 
   // Database operation logging
-  database(operation: string, table: string, details?: Record<string, any>) {
+  database(operation: string, table: string, details?: Record<string, unknown>) {
     const entry = this.formatMessage('debug', `Database: ${operation} on ${table}`, {
       operation,
       table,
@@ -80,7 +80,7 @@ class Logger {
   }
 
   // API request logging
-  api(method: string, path: string, statusCode: number, duration?: number, details?: Record<string, any>) {
+  api(method: string, path: string, statusCode: number, duration?: number, details?: Record<string, unknown>) {
     const level = statusCode >= 400 ? 'warn' : 'info'
     const entry = this.formatMessage(level, `API: ${method} ${path} ${statusCode}`, {
       method,

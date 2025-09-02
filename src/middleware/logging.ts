@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { logger } from '@/lib/logger'
 
 export function loggingMiddleware(request: NextRequest) {
-  const startTime = Date.now()
+  // const startTime = Date.now() // Commented out as not used currently
   
   // Log incoming request
   logger.api(
@@ -26,7 +26,7 @@ export function logApiResponse(
   path: string,
   statusCode: number,
   startTime: number,
-  metadata?: Record<string, any>
+  metadata?: Record<string, unknown>
 ) {
   const duration = Date.now() - startTime
   logger.api(method, path, statusCode, duration, metadata)

@@ -1,10 +1,5 @@
 import { PrismaClient } from '@prisma/client'
 
-// Force load dotenv for API routes
-if (typeof window === 'undefined') {
-  require('dotenv').config()
-}
-
 function createFreshPrismaClient() {
   const databaseUrl = process.env.DATABASE_URL
   const poolSize = parseInt(process.env.DATABASE_POOL_SIZE || '10', 10)

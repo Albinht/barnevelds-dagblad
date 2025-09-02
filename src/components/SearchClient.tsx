@@ -133,7 +133,7 @@ export default function SearchClient({ initialQuery }: SearchClientProps) {
                 'Zoeken...'
               ) : (
                 <>
-                  {totalResults} {totalResults === 1 ? 'resultaat' : 'resultaten'} voor "<strong>{query}</strong>"
+                  {totalResults} {totalResults === 1 ? 'resultaat' : 'resultaten'} voor &ldquo;<strong>{query}</strong>&rdquo;
                 </>
               )}
             </p>
@@ -150,7 +150,7 @@ export default function SearchClient({ initialQuery }: SearchClientProps) {
         {/* No Results */}
         {!loading && query && totalResults === 0 && (
           <div className="text-center py-12">
-            <p className="text-gray-600 mb-4">Geen resultaten gevonden voor "{query}"</p>
+            <p className="text-gray-600 mb-4">Geen resultaten gevonden voor &ldquo;{query}&rdquo;</p>
             <p className="text-sm text-gray-500">Probeer andere zoektermen of controleer de spelling</p>
           </div>
         )}
