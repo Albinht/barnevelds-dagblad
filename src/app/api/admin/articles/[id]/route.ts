@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/nextauth'
+import { handlePutFallback, handleDeleteFallback } from './fallback-route'
 
 interface Params {
   params: Promise<{ id: string }>
@@ -56,26 +57,49 @@ export async function GET(request: Request, { params }: Params) {
 
 // PUT update article
 export async function PUT(request: Request, { params }: Params) {
-  // Check authentication
-  const session = await getServerSession(authOptions)
-  if (!session?.user?.email) {
-    return NextResponse.json(
-      { error: 'Unauthorized' },
-      { status: 401 }
-    )
-  }
-  
   try {
+    // Check authentication
+    const session = await getServerSession(authOptions)
+    console.log('PUT Article - Session:', session?.user?.email || 'No session')
+    
+    if (!session?.user?.email) {
+      return NextResponse.json(
+        { error: 'Unauthorized - Please log in' },
+        { status: 401 }
+      )
+    }
+    
     const { id } = await params
     const body = await request.json()
     
+    console.log('Updating article:', id)
+    console.log('Update data:', body)
+    
+    // Prepare update data - remove fields that might cause issues
+    const updateData: any = {
+      title: body.title,
+      excerpt: body.excerpt,
+      summary: body.summary,
+      content: body.content,
+      image: body.image,
+      category: body.category,
+      tags: body.tags || [],
+      premium: body.premium || false,
+      featured: body.featured || false,
+      published: body.published !== false,
+      updatedAt: new Date()
+    }
+    
+    // Only update publishedAt if article is being published for the first time
+    if (body.published && body.publishedAt === undefined) {
+      updateData.publishedAt = new Date()
+    } else if (body.publishedAt) {
+      updateData.publishedAt = new Date(body.publishedAt)
+    }
+    
     const article = await prisma.article.update({
       where: { id },
-      data: {
-        ...body,
-        publishedAt: body.published && !body.publishedAt ? new Date() : body.publishedAt,
-        updatedAt: new Date()
-      },
+      data: updateData,
       include: {
         author: {
           select: { id: true, username: true, email: true }
@@ -83,11 +107,25 @@ export async function PUT(request: Request, { params }: Params) {
       }
     })
     
+    console.log('Article updated successfully')
     return NextResponse.json(article)
   } catch (error) {
-    console.error('Error updating article:', error)
+    console.error('Error updating article - Details:', {
+      message: error instanceof Error ? error.message : 'Unknown error',
+      error
+    })
+    
+    // If database fails, try JSON fallback
+    if (error instanceof Error && error.message.includes('database')) {
+      console.log('Database error, trying JSON fallback')
+      return handlePutFallback(request, { params })
+    }
+    
     return NextResponse.json(
-      { error: 'Failed to update article' },
+      { 
+        error: 'Failed to update article',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      },
       { status: 500 }
     )
   }
@@ -95,27 +133,56 @@ export async function PUT(request: Request, { params }: Params) {
 
 // DELETE article
 export async function DELETE(request: Request, { params }: Params) {
-  // Check authentication
-  const session = await getServerSession(authOptions)
-  if (!session?.user?.email) {
-    return NextResponse.json(
-      { error: 'Unauthorized' },
-      { status: 401 }
-    )
-  }
-  
   try {
+    // Check authentication
+    const session = await getServerSession(authOptions)
+    console.log('DELETE Article - Session:', session?.user?.email || 'No session')
+    
+    if (!session?.user?.email) {
+      return NextResponse.json(
+        { error: 'Unauthorized - Please log in' },
+        { status: 401 }
+      )
+    }
+    
     const { id } = await params
+    console.log('Deleting article:', id)
+    
+    // First check if article exists
+    const existingArticle = await prisma.article.findUnique({
+      where: { id }
+    })
+    
+    if (!existingArticle) {
+      return NextResponse.json(
+        { error: 'Article not found' },
+        { status: 404 }
+      )
+    }
     
     await prisma.article.delete({
       where: { id }
     })
     
+    console.log('Article deleted successfully')
     return NextResponse.json({ success: true })
   } catch (error) {
-    console.error('Error deleting article:', error)
+    console.error('Error deleting article - Details:', {
+      message: error instanceof Error ? error.message : 'Unknown error',
+      error
+    })
+    
+    // If database fails, try JSON fallback
+    if (error instanceof Error && error.message.includes('database')) {
+      console.log('Database error, trying JSON fallback')
+      return handleDeleteFallback(request, { params })
+    }
+    
     return NextResponse.json(
-      { error: 'Failed to delete article' },
+      { 
+        error: 'Failed to delete article',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      },
       { status: 500 }
     )
   }
