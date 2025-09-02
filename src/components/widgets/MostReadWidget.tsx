@@ -1,13 +1,44 @@
 import Link from 'next/link'
+import { getMostViewedArticles } from '@/lib/articles-db'
 import { getArticlesData } from '@/lib/serverData'
 import { Article } from '@/types/article'
 
 export default async function MostReadWidget() {
-  const articles = await getArticlesData()
-  // Sort by comments (proxy for "most read") and take top 5
-  const mostReadArticles = articles
-    .sort((a: Article, b: Article) => (b.comments || 0) - (a.comments || 0))
-    .slice(0, 5)
+  let mostReadArticles: Article[] = []
+  
+  try {
+    // Try to get most viewed from database
+    const dbArticles = await getMostViewedArticles(5)
+    if (dbArticles && dbArticles.length > 0) {
+      mostReadArticles = dbArticles.map(article => ({
+        id: article.id,
+        slug: article.slug,
+        title: article.title,
+        excerpt: article.excerpt,
+        summary: article.summary,
+        content: article.content,
+        image: article.image,
+        category: article.category,
+        tags: article.tags,
+        premium: article.premium,
+        author: article.author.username || article.author.email,
+        publishedAt: article.publishedAt?.toISOString().split('T')[0] || '',
+        comments: 0,
+        timestamp: article.createdAt.toISOString()
+      }))
+    }
+  } catch (error) {
+    console.error('Database error, using fallback:', error)
+  }
+  
+  // Fallback to JSON if database doesn't work or has no articles
+  if (mostReadArticles.length === 0) {
+    const articles = await getArticlesData()
+    // Sort by comments (proxy for "most read") and take top 5
+    mostReadArticles = articles
+      .sort((a: Article, b: Article) => (b.comments || 0) - (a.comments || 0))
+      .slice(0, 5)
+  }
 
   return (
     <div className="bg-white rounded-lg shadow-sm p-6">

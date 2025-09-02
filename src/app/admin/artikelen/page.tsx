@@ -25,7 +25,7 @@ export default function ArticleManagementPage() {
   const [selectedCategory, setSelectedCategory] = useState('')
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null)
   const [bulkActions, setBulkActions] = useState<string[]>([])
-  const [showBulkActions, setShowBulkActions] = useState(false)
+  // const [showBulkActions, setShowBulkActions] = useState(false) // For future use
 
   useEffect(() => {
     fetchArticles()
@@ -94,7 +94,7 @@ export default function ArticleManagementPage() {
       }
       
       setBulkActions([])
-      setShowBulkActions(false)
+      // setShowBulkActions(false) // Commented out - for future use
       
     } catch {
       setError('Bulk action failed')

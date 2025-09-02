@@ -25,7 +25,7 @@ export async function GET(request: Request) {
     const featured = searchParams.get('featured')
     const search = searchParams.get('search')
     
-    const skip = (page - 1) * limit
+    // const skip = (page - 1) * limit // Not used with findMany without pagination
     
     // Build where clause with proper typing
     const where: Prisma.ArticleWhereInput = {}
@@ -108,8 +108,7 @@ export async function POST(request: Request) {
       tags,
       premium,
       featured,
-      published,
-      authorId
+      published
     } = body
     
     // Generate slug if not provided

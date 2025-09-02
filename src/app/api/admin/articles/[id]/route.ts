@@ -76,7 +76,7 @@ export async function PUT(request: Request, { params }: Params) {
     console.log('Update data:', body)
     
     // Prepare update data - remove fields that might cause issues
-    const updateData: any = {
+    const updateData: Record<string, unknown> = {
       title: body.title,
       excerpt: body.excerpt,
       summary: body.summary,

@@ -2,6 +2,7 @@ import fs from 'fs/promises'
 import path from 'path'
 import { Article } from '@/types/article'
 import { Bedrijf } from '@/types/bedrijf'
+import { getAllArticles } from './articles-db'
 
 // Server-side data loading functions
 export async function getBedrijvenData(): Promise<Bedrijf[]> {
@@ -19,6 +20,33 @@ export async function getBedrijvenData(): Promise<Bedrijf[]> {
 }
 
 export async function getArticlesData(): Promise<Article[]> {
+  try {
+    // First try to get from database
+    const dbArticles = await getAllArticles()
+    if (dbArticles && dbArticles.length > 0) {
+      // Transform database articles to match Article type
+      return dbArticles.map(article => ({
+        id: article.id,
+        slug: article.slug,
+        title: article.title,
+        excerpt: article.excerpt,
+        summary: article.summary,
+        content: article.content,
+        image: article.image,
+        category: article.category,
+        tags: article.tags,
+        premium: article.premium,
+        author: article.author.username || article.author.email,
+        publishedAt: article.publishedAt?.toISOString().split('T')[0] || '',
+        comments: 0,
+        timestamp: article.createdAt.toISOString()
+      }))
+    }
+  } catch (dbError) {
+    console.error('Database error, falling back to JSON:', dbError)
+  }
+  
+  // Fallback to JSON if database fails or is empty
   try {
     const filePath = path.join(process.cwd(), 'data', 'articles.json')
     const data = await fs.readFile(filePath, 'utf8')

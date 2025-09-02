@@ -128,6 +128,30 @@ export async function getRelatedArticles(currentSlug: string, category: string, 
   }
 }
 
+export async function getMostViewedArticles(limit: number = 5): Promise<DatabaseArticle[]> {
+  try {
+    const articles = await prisma.article.findMany({
+      where: { published: true },
+      include: {
+        author: {
+          select: {
+            id: true,
+            username: true,
+            email: true
+          }
+        }
+      },
+      orderBy: { views: 'desc' },
+      take: limit
+    })
+    
+    return articles as DatabaseArticle[]
+  } catch (error) {
+    console.error('Error fetching most viewed articles:', error)
+    return []
+  }
+}
+
 export async function createArticle(data: {
   slug: string
   title: string

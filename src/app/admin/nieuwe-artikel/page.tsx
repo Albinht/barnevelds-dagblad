@@ -250,6 +250,7 @@ export default function NewArticlePage() {
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="">Selecteer categorie</option>
+              <option value="112">112 Meldingen</option>
               <option value="Lokaal Nieuws">Lokaal Nieuws</option>
               <option value="Sport">Sport</option>
               <option value="Politiek">Politiek</option>

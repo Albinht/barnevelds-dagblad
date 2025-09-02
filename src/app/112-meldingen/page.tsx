@@ -11,13 +11,14 @@ export const metadata: Metadata = {
 }
 
 export default async function Page112Meldingen() {
-  // Fetch all published articles with the "112" tag
+  // Fetch all published articles with the "112" category or tag
   const articles = await prisma.article.findMany({
     where: {
       published: true,
-      tags: {
-        has: '112'
-      }
+      OR: [
+        { category: '112' },
+        { tags: { has: '112' } }
+      ]
     },
     include: {
       author: {

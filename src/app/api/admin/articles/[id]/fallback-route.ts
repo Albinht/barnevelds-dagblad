@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { getArticles, updateArticle, deleteArticle } from '@/lib/articles'
+import { updateArticle, deleteArticle } from '@/lib/articles'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/nextauth'
 
