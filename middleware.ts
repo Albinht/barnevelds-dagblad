@@ -38,12 +38,40 @@ export default withAuth(
       }
     }
     
-    // Add security headers
+    // Add comprehensive security headers
     const response = NextResponse.next()
+    
+    // Basic security headers
     response.headers.set('X-Content-Type-Options', 'nosniff')
     response.headers.set('X-Frame-Options', 'DENY')
     response.headers.set('X-XSS-Protection', '1; mode=block')
     response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin')
+    
+    // HTTPS enforcement
+    response.headers.set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload')
+    
+    // Content Security Policy - Restrictive but allows necessary resources
+    const cspDirectives = [
+      "default-src 'self'",
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://accounts.google.com https://apis.google.com",
+      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+      "font-src 'self' https://fonts.gstatic.com",
+      "img-src 'self' data: https: blob:",
+      "connect-src 'self' https://accounts.google.com https://www.googleapis.com",
+      "frame-src 'self' https://accounts.google.com",
+      "object-src 'none'",
+      "base-uri 'self'",
+      "form-action 'self'",
+      "frame-ancestors 'none'",
+      "upgrade-insecure-requests"
+    ].join('; ')
+    
+    response.headers.set('Content-Security-Policy', cspDirectives)
+    
+    // Permissions Policy - Restrict browser features
+    response.headers.set('Permissions-Policy', 
+      'accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()'
+    )
     
     return response
   },
