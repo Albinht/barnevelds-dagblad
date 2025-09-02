@@ -34,7 +34,23 @@ export default function NewArticlePage() {
     const file = e.target.files?.[0]
     if (!file) return
 
+    // Validate file type client-side
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif']
+    if (!allowedTypes.includes(file.type)) {
+      alert(`Invalid file type: ${file.type}. Please upload JPG, PNG, GIF or WebP images.`)
+      return
+    }
+
+    // Validate file size client-side (5MB)
+    const maxSize = 5 * 1024 * 1024
+    if (file.size > maxSize) {
+      alert(`File too large: ${(file.size / 1024 / 1024).toFixed(2)}MB. Maximum size is 5MB.`)
+      return
+    }
+
     setIsUploading(true)
+    console.log('Starting upload for:', file.name)
+    
     try {
       const formData = new FormData()
       formData.append('file', file)
@@ -44,19 +60,28 @@ export default function NewArticlePage() {
         body: formData,
       })
 
+      const result = await response.json()
+      console.log('Upload response:', result)
+
       if (response.ok) {
-        const result = await response.json()
         setFormData(prev => ({
           ...prev,
           image: result.url
         }))
+        console.log('Image uploaded successfully:', result.url)
+        // Show success message briefly
+        const successMsg = document.createElement('div')
+        successMsg.className = 'fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded shadow-lg z-50'
+        successMsg.textContent = 'Image uploaded successfully!'
+        document.body.appendChild(successMsg)
+        setTimeout(() => successMsg.remove(), 3000)
       } else {
-        const error = await response.json()
-        alert(`Upload failed: ${error.error}`)
+        console.error('Upload failed:', result)
+        alert(`Upload failed: ${result.error}\n${result.details || ''}`)
       }
     } catch (error) {
       console.error('Upload error:', error)
-      alert('Failed to upload image. Please try again.')
+      alert('Network error: Failed to upload image. Please check your connection and try again.')
     } finally {
       setIsUploading(false)
     }

@@ -145,6 +145,14 @@ export async function POST(request: Request) {
       )
     }
     
+    // Automatically add "112" tag if category is "112"
+    let finalTags = tags || []
+    if (category === '112' || category === '112 Meldingen') {
+      if (!finalTags.includes('112')) {
+        finalTags = [...finalTags, '112']
+      }
+    }
+    
     const article = await prisma.article.create({
       data: {
         title,
@@ -154,7 +162,7 @@ export async function POST(request: Request) {
         content,
         image,
         category,
-        tags: tags || [],
+        tags: finalTags,
         premium: premium || false,
         featured: featured || false,
         published: published || false,

@@ -1,8 +1,10 @@
 import { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
-import { prisma } from '@/lib/prisma'
+import { getAllArticles } from '@/lib/articles-db'
+import { getArticles } from '@/lib/articles'
 import { formatDate, formatTime } from '@/lib/dateUtils'
+import { Article } from '@/types/article'
 
 export const metadata: Metadata = {
   title: '112 Meldingen | Barnevelds Dagblad',
@@ -11,25 +13,61 @@ export const metadata: Metadata = {
 }
 
 export default async function Page112Meldingen() {
-  // Fetch all published articles with the "112" category or tag
-  const articles = await prisma.article.findMany({
-    where: {
-      published: true,
-      OR: [
-        { category: '112' },
-        { tags: { has: '112' } }
-      ]
-    },
-    include: {
-      author: {
-        select: {
-          username: true
-        }
-      }
-    },
-    orderBy: {
-      publishedAt: 'desc'
+  let articles: Article[] = []
+  
+  try {
+    // Try to get from database first
+    const dbArticles = await getAllArticles()
+    
+    // Filter for 112 articles
+    const filtered112Articles = dbArticles.filter(article => 
+      article.published && (
+        article.category === '112' || 
+        article.category === '112 Meldingen' ||
+        article.tags?.includes('112')
+      )
+    )
+    
+    if (filtered112Articles.length > 0) {
+      // Transform to Article type
+      articles = filtered112Articles.map(article => ({
+        id: article.id,
+        slug: article.slug,
+        title: article.title,
+        excerpt: article.excerpt,
+        summary: article.summary,
+        content: article.content,
+        image: article.image,
+        category: article.category,
+        tags: article.tags,
+        premium: article.premium,
+        author: article.author.username || article.author.email,
+        publishedAt: article.publishedAt?.toISOString().split('T')[0] || '',
+        comments: 0,
+        timestamp: article.createdAt.toISOString()
+      }))
     }
+  } catch (dbError) {
+    console.error('Database error, trying JSON fallback:', dbError)
+    
+    // Fallback to JSON
+    try {
+      const jsonArticles = await getArticles()
+      articles = jsonArticles.filter(article => 
+        article.category === '112' || 
+        article.category === '112 Meldingen' ||
+        article.tags?.includes('112')
+      )
+    } catch (jsonError) {
+      console.error('JSON fallback also failed:', jsonError)
+    }
+  }
+  
+  // Sort by date (newest first)
+  articles.sort((a, b) => {
+    const dateA = new Date(a.publishedAt || a.timestamp || 0)
+    const dateB = new Date(b.publishedAt || b.timestamp || 0)
+    return dateB.getTime() - dateA.getTime()
   })
 
   return (
@@ -54,8 +92,8 @@ export default async function Page112Meldingen() {
       {articles.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
           {articles.map((article) => {
-            const publishDate = formatDate(article.publishedAt?.toISOString() || article.createdAt.toISOString())
-            const publishTime = formatTime(article.publishedAt?.toISOString() || article.createdAt.toISOString())
+            const publishDate = formatDate(article.publishedAt || article.timestamp)
+            const publishTime = formatTime(article.publishedAt || article.timestamp)
             
             return (
               <article key={article.id} className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-lg transition-shadow">
@@ -79,7 +117,7 @@ export default async function Page112Meldingen() {
                     <span className="inline-block bg-red-600 text-white px-2 py-1 text-xs font-bold rounded uppercase tracking-wide">
                       112
                     </span>
-                    {article.category && (
+                    {article.category && article.category !== '112' && (
                       <span className="inline-block bg-[#0F47AF] text-white px-2 py-1 text-xs font-bold rounded uppercase tracking-wide">
                         {article.category}
                       </span>
@@ -108,10 +146,10 @@ export default async function Page112Meldingen() {
                   {/* Article Meta */}
                   <div className="flex items-center justify-between text-xs text-gray-500 pt-3 border-t border-gray-100">
                     <div className="flex items-center">
-                      <span>Door {article.author.username}</span>
+                      <span>Door {article.author}</span>
                     </div>
                     <div className="flex items-center">
-                      <time dateTime={article.publishedAt?.toISOString() || article.createdAt.toISOString()}>
+                      <time dateTime={article.publishedAt || article.timestamp}>
                         {publishDate} • {publishTime}
                       </time>
                     </div>
@@ -131,7 +169,7 @@ export default async function Page112Meldingen() {
           </div>
           <h2 className="text-2xl font-bold text-gray-900 mb-4">Geen 112 meldingen gevonden</h2>
           <p className="text-gray-600 mb-8 max-w-md mx-auto">
-            Er zijn momenteel geen artikelen met de 112 tag. Zodra er nieuwe meldingen zijn, verschijnen ze hier.
+            Er zijn momenteel geen artikelen in de 112 categorie. Zodra er nieuwe meldingen zijn, verschijnen ze hier.
           </p>
           <Link 
             href="/"
