@@ -165,6 +165,31 @@ export default async function Emergency112Widget() {
     )
   } catch (error) {
     console.error('Error loading 112 widget:', error)
-    return null
+    
+    // Show a placeholder when database is not available (development)
+    return (
+      <div className="bg-white rounded-lg shadow-sm mb-6 overflow-hidden">
+        <div className="bg-red-600 px-4 py-3 relative">
+          <div className="flex items-center justify-between">
+            <h3 className="text-white font-bold text-sm uppercase tracking-wide">
+              112 MELDINGEN
+            </h3>
+            <span className="bg-white text-red-600 px-2 py-0.5 text-xs font-bold rounded">
+              OFFLINE
+            </span>
+          </div>
+        </div>
+        <div className="p-4 text-center text-gray-500 text-sm">
+          112 meldingen worden geladen...
+          <br />
+          <span className="text-xs">Database niet beschikbaar in ontwikkeling</span>
+        </div>
+        <div className="p-4 bg-gray-50">
+          <div className="block bg-gray-400 text-white font-bold text-center py-2 px-4 rounded text-sm cursor-not-allowed">
+            ALLE 112 MELDINGEN →
+          </div>
+        </div>
+      </div>
+    )
   }
 }
