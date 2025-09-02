@@ -19,14 +19,12 @@ export async function GET(request: Request) {
     }
 
     const { searchParams } = new URL(request.url)
-    const page = parseInt(searchParams.get('page') || '1')
-    const limit = parseInt(searchParams.get('limit') || '10')
+    // const page = parseInt(searchParams.get('page') || '1') // Not used currently
+    // const limit = parseInt(searchParams.get('limit') || '10') // Not used currently
     const category = searchParams.get('category')
     const published = searchParams.get('published')
     const featured = searchParams.get('featured')
     const search = searchParams.get('search')
-    
-    // const skip = (page - 1) * limit // Not used with findMany without pagination
     
     // Build where clause with proper typing
     const where: Prisma.ArticleWhereInput = {}

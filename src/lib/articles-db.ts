@@ -14,6 +14,7 @@ export interface DatabaseArticle {
   featured: boolean
   published: boolean
   views: number
+  authorName: string | null
   publishedAt: Date | null
   createdAt: Date
   updatedAt: Date

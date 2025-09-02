@@ -3,7 +3,7 @@ import { prisma } from '@/lib/prisma'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/nextauth'
 import { handlePutFallback, handleDeleteFallback } from './fallback-route'
-import { revalidatePath, revalidateTag } from 'next/cache'
+import { revalidatePath } from 'next/cache'
 
 interface Params {
   params: Promise<{ id: string }>
