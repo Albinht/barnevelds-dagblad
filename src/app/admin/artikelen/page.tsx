@@ -48,7 +48,7 @@ export default function ArticleManagementPage() {
 
   const handleDelete = async (id: string) => {
     try {
-      const response = await fetch(`/api/articles/${id}`, {
+      const response = await fetch(`/api/admin/articles/${id}`, {
         method: 'DELETE',
       })
 
@@ -69,16 +69,16 @@ export default function ArticleManagementPage() {
     try {
       const promises = bulkActions.map(id => {
         if (action === 'delete') {
-          return fetch(`/api/articles/${id}`, { method: 'DELETE' })
+          return fetch(`/api/admin/articles/${id}`, { method: 'DELETE' })
         } else if (action === 'publish') {
-          return fetch(`/api/articles/${id}`, {
-            method: 'PATCH',
+          return fetch(`/api/admin/articles/${id}`, {
+            method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ published: true })
           })
         } else if (action === 'unpublish') {
-          return fetch(`/api/articles/${id}`, {
-            method: 'PATCH',
+          return fetch(`/api/admin/articles/${id}`, {
+            method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ published: false })
           })
