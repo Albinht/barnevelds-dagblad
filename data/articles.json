@@ -1,1 +1,94 @@
-[]
+[
+  {
+    "title": "new",
+    "summary": "new",
+    "excerpt": "new",
+    "image": "/barneveldsdagblad.jpeg",
+    "category": "Lokaal Nieuws",
+    "premium": false,
+    "author": "new",
+    "publishedAt": "2025-09-02",
+    "comments": 0,
+    "tags": [],
+    "slug": "new",
+    "id": "95bd2ee0-062f-412e-bb87-2f760e153458",
+    "timestamp": "2025-09-02T10:37:38.291Z"
+  },
+  {
+    "title": "vvb wint",
+    "summary": "vvb wint",
+    "excerpt": "vvb wint",
+    "image": "/barneveldsdagblad.jpeg",
+    "category": "Sport",
+    "premium": false,
+    "author": "vvb wint",
+    "publishedAt": "2025-09-02",
+    "comments": 0,
+    "tags": [],
+    "slug": "vvb-wint",
+    "id": "0c6a22a9-40cf-4aea-98c4-7eb3a9123751",
+    "timestamp": "2025-09-02T10:29:12.179Z"
+  },
+  {
+    "title": "Test ",
+    "summary": "test",
+    "excerpt": "test",
+    "image": "/barneveldsdagblad.jpeg",
+    "category": "Lokaal Nieuws",
+    "premium": false,
+    "author": "test",
+    "publishedAt": "2025-09-02",
+    "comments": 0,
+    "tags": [],
+    "slug": "test-",
+    "id": "1b623811-0648-44b3-9d70-d0cf7017460a",
+    "timestamp": "2025-09-02T10:28:42.606Z"
+  },
+  {
+    "title": "Blauwalgen in ringvijver Koewei bij landgoed Schaffelaar",
+    "summary": "Blauwalgen in ringvijver Koewei bij landgoed Schaffelaar",
+    "excerpt": "Blauwalgen in ringvijver Koewei bij landgoed Schaffelaar",
+    "image": "/uploads/articles/article-1756807060321-xhqhxp.webp",
+    "category": "Lokaal Nieuws",
+    "premium": false,
+    "author": "Dara Tiepenbroek",
+    "publishedAt": "2025-09-02",
+    "comments": 0,
+    "tags": [],
+    "slug": "blauwalgen-in-ringvijver-koewei-bij-landgoed-schaffelaar",
+    "id": "46182f37-3981-4a96-a298-152691789b11",
+    "timestamp": "2025-09-02T09:57:49.454Z"
+  },
+  {
+    "title": "Auto slaat over de kop na slippartij op de Koningsweg bij Garderen",
+    "summary": "Auto slaat over de kop na slippartij op de Koningsweg bij Garderen",
+    "excerpt": "Auto slaat over de kop na slippartij op de Koningsweg bij Garderen",
+    "image": "/uploads/articles/article-1756806960216-wzq57n.webp",
+    "category": "Lokaal Nieuws",
+    "premium": false,
+    "author": "Dara Tiepenbroek",
+    "publishedAt": "2025-09-02",
+    "comments": 0,
+    "tags": [
+      "Ongeval"
+    ],
+    "slug": "auto-slaat-over-de-kop-na-slippartij-op-de-koningsweg-bij-garderen",
+    "id": "36a5d9fb-4f6a-40ab-9975-9593b4c3c50b",
+    "timestamp": "2025-09-02T09:56:12.301Z"
+  },
+  {
+    "title": "Frontale botsing op Dronkelaarseweg in Barneveld veroorzaakt brand en twee gewonden",
+    "summary": "BARNEVELD – Maandagmiddag rond 14.40 uur kwamen een bedrijfsbus en een personenauto frontaal met elkaar in botsing op de Dronkelaarseweg in Barneveld. Kort na de klap ontstond er brand, waarbij de vlammen metershoog oplaaiden. Beide bestuurders raakten bij het ongeval gewond.",
+    "excerpt": "BARNEVELD – Maandagmiddag rond 14.40 uur kwamen een bedrijfsbus en een personenauto frontaal met elkaar in botsing op de Dronkelaarseweg in Barneveld. Kort na de klap ontstond er brand, waarbij de vlammen metershoog oplaaiden. Beide bestuurders raakten bij het ongeval gewond.",
+    "image": "/uploads/articles/article-1756805939993-2bk0w5.webp",
+    "category": "Lokaal Nieuws",
+    "premium": false,
+    "author": "Dara Tiepenbroek",
+    "publishedAt": "2025-09-02",
+    "comments": 0,
+    "tags": [],
+    "slug": "frontale-botsing-op-dronkelaarseweg-in-barneveld-veroorzaakt-brand-en-twee-gewonden",
+    "id": "fe6183e5-a219-48aa-9f29-8ec2b3c6525e",
+    "timestamp": "2025-09-02T09:39:20.627Z"
+  }
+]

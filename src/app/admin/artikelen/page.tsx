@@ -23,6 +23,8 @@ export default function ArticleManagementPage() {
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('')
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null)
+  const [bulkActions, setBulkActions] = useState<string[]>([])
+  const [showBulkActions, setShowBulkActions] = useState(false)
 
   useEffect(() => {
     fetchArticles()
@@ -59,6 +61,59 @@ export default function ArticleManagementPage() {
     } catch {
       setError('Network error')
     }
+  }
+
+  const handleBulkAction = async (action: string) => {
+    if (bulkActions.length === 0) return
+
+    try {
+      const promises = bulkActions.map(id => {
+        if (action === 'delete') {
+          return fetch(`/api/articles/${id}`, { method: 'DELETE' })
+        } else if (action === 'publish') {
+          return fetch(`/api/articles/${id}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ published: true })
+          })
+        } else if (action === 'unpublish') {
+          return fetch(`/api/articles/${id}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ published: false })
+          })
+        }
+        return Promise.resolve()
+      })
+
+      await Promise.all(promises)
+      
+      if (action === 'delete') {
+        setArticles(articles.filter(article => !bulkActions.includes(article.id)))
+      }
+      
+      setBulkActions([])
+      setShowBulkActions(false)
+      
+    } catch {
+      setError('Bulk action failed')
+    }
+  }
+
+  const toggleBulkSelection = (id: string) => {
+    setBulkActions(prev => 
+      prev.includes(id) 
+        ? prev.filter(item => item !== id)
+        : [...prev, id]
+    )
+  }
+
+  const selectAllVisible = () => {
+    setBulkActions(filteredArticles.map(article => article.id))
+  }
+
+  const clearSelection = () => {
+    setBulkActions([])
   }
 
   const categories = [...new Set(articles.map(article => article.category))]
@@ -103,7 +158,7 @@ export default function ArticleManagementPage() {
 
       {/* Search and Filter */}
       <div className="bg-white p-4 rounded-lg shadow">
-        <div className="flex flex-col sm:flex-row gap-4">
+        <div className="flex flex-col sm:flex-row gap-4 mb-4">
           <div className="flex-1">
             <input
               type="text"
@@ -126,6 +181,39 @@ export default function ArticleManagementPage() {
             </select>
           </div>
         </div>
+        
+        {/* Bulk Actions */}
+        {bulkActions.length > 0 && (
+          <div className="flex items-center gap-3 p-3 bg-blue-50 rounded-md">
+            <span className="text-sm text-blue-700">
+              {bulkActions.length} selected
+            </span>
+            <button
+              onClick={() => handleBulkAction('publish')}
+              className="text-sm bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700"
+            >
+              Publish
+            </button>
+            <button
+              onClick={() => handleBulkAction('unpublish')}
+              className="text-sm bg-yellow-600 text-white px-3 py-1 rounded hover:bg-yellow-700"
+            >
+              Unpublish
+            </button>
+            <button
+              onClick={() => handleBulkAction('delete')}
+              className="text-sm bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
+            >
+              Delete
+            </button>
+            <button
+              onClick={clearSelection}
+              className="text-sm text-gray-600 px-3 py-1 rounded hover:bg-gray-100"
+            >
+              Clear
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Articles Table */}
@@ -134,6 +222,14 @@ export default function ArticleManagementPage() {
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <input
+                    type="checkbox"
+                    checked={bulkActions.length === filteredArticles.length && filteredArticles.length > 0}
+                    onChange={() => bulkActions.length === filteredArticles.length ? clearSelection() : selectAllVisible()}
+                    className="rounded border-gray-300"
+                  />
+                </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Article
                 </th>
@@ -156,7 +252,15 @@ export default function ArticleManagementPage() {
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {filteredArticles.map((article, index) => (
-                <tr key={`${article.id}-${index}`} className="hover:bg-gray-50">
+                <tr key={`${article.id}-${index}`} className={`hover:bg-gray-50 ${bulkActions.includes(article.id) ? 'bg-blue-50' : ''}`}>
+                  <td className="px-6 py-4">
+                    <input
+                      type="checkbox"
+                      checked={bulkActions.includes(article.id)}
+                      onChange={() => toggleBulkSelection(article.id)}
+                      className="rounded border-gray-300"
+                    />
+                  </td>
                   <td className="px-6 py-4">
                     <div className="flex items-center">
                       <Image

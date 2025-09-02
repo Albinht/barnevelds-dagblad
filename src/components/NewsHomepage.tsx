@@ -54,17 +54,17 @@ export default function NewsHomepage({ articles, bedrijven }: NewsHomepageProps)
   )
 
   return (
-    <div className="container mx-auto px-0 lg:px-4 py-4 md:py-6">
-      <div className="flex flex-col lg:flex-row gap-6">
+    <div className="container mx-auto px-0 md:px-2 lg:px-4 py-4 md:py-6">
+      <div className="flex flex-col md:flex-row lg:flex-row gap-4 md:gap-6">
         {/* Main Content */}
-        <div className="flex-1 w-full">
+        <div className="flex-1 w-full md:w-2/3 lg:w-3/4">
           {/* Top Featured Grid */}
-          <div className="mb-6 md:mb-12 px-4 lg:px-0">
+          <div className="mb-6 md:mb-8 lg:mb-12 px-4 md:px-2 lg:px-0">
             <NewsGrid articles={mainGridArticles} />
           </div>
 
           {/* Category Sections */}
-          <div className="space-y-6 md:space-y-8">
+          <div className="space-y-4 md:space-y-6 lg:space-y-8">
             <RegioGrid articles={regioArticles} />
             <SportGrid articles={sportArticles} />
             <ShowGrid articles={showArticles} />
@@ -72,16 +72,18 @@ export default function NewsHomepage({ articles, bedrijven }: NewsHomepageProps)
           </div>
         </div>
 
-        {/* Desktop Sidebar */}
-        <div className="w-80 flex-shrink-0 hidden lg:block">
-          <LoginCTA />
-          <SpotlightBedrijven bedrijven={bedrijven} />
-          <NewsTicker articles={tickerArticles} />
+        {/* Tablet/Desktop Sidebar */}
+        <div className="w-full md:w-1/3 lg:w-80 flex-shrink-0 hidden md:block">
+          <div className="space-y-4 md:space-y-6">
+            <LoginCTA />
+            <SpotlightBedrijven bedrijven={bedrijven} />
+            <NewsTicker articles={tickerArticles} />
+          </div>
         </div>
       </div>
 
-      {/* Mobile Sidebar - shown below main content on smaller screens */}
-      <div className="lg:hidden mt-6 md:mt-8 space-y-4 w-full max-w-md mx-auto px-4">
+      {/* Mobile Sidebar - shown below main content on mobile only */}
+      <div className="md:hidden mt-6 space-y-4 w-full max-w-md mx-auto px-4">
         <LoginCTA />
         <SpotlightBedrijven bedrijven={bedrijven} />
         <NewsTicker articles={tickerArticles} />

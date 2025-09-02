@@ -8,24 +8,26 @@ import RelatedArticles from '@/components/widgets/RelatedArticles'
 import SpotlightBedrijven from '@/components/SpotlightBedrijven'
 import { formatDate, formatTime } from '@/lib/dateUtils'
 import { getFeaturedBedrijven } from '@/lib/bedrijven'
+import { DatabaseArticle } from '@/lib/articles-db'
 import '@/styles/article.css'
 
 interface ArticleLayoutProps {
   article: Article
   children: React.ReactNode
   featuredBedrijven?: Awaited<ReturnType<typeof getFeaturedBedrijven>>
+  relatedArticles?: DatabaseArticle[]
 }
 
-export default function ArticleLayout({ article, children, featuredBedrijven = [] }: ArticleLayoutProps) {
+export default function ArticleLayout({ article, children, featuredBedrijven = [], relatedArticles = [] }: ArticleLayoutProps) {
   const publishDate = formatDate(article.publishedAt || article.timestamp)
   const publishTime = formatTime(article.publishedAt || article.timestamp)
 
   return (
     <div className="container mx-auto px-4 py-4 md:py-8 max-w-7xl">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-12 gap-4 md:gap-6 lg:gap-8">
           
-          {/* Article Content - Full width on mobile, left column on desktop */}
-          <article className="lg:col-span-8 bg-white rounded-lg shadow-sm overflow-hidden">
+          {/* Article Content - Full width on mobile, 2 cols on tablet, 8 cols on desktop */}
+          <article className="md:col-span-2 lg:col-span-8 bg-white rounded-lg shadow-sm overflow-hidden">
             
             {/* Hero Image */}
             {article.image && (
@@ -42,7 +44,7 @@ export default function ArticleLayout({ article, children, featuredBedrijven = [
             )}
             
             {/* Article Header */}
-            <div className="p-4 md:p-6 lg:p-8">
+            <div className="p-4 md:p-5 lg:p-8">
               {/* Category Badge */}
               {article.category && (
                 <div className="mb-4">
@@ -122,16 +124,53 @@ export default function ArticleLayout({ article, children, featuredBedrijven = [
                 </div>
               )}
               
-              {/* Related Articles Placeholder */}
-              <div className="mt-8 pt-6 border-t border-gray-200">
-                <h3 className="text-lg font-bold text-gray-900 mb-4">Gerelateerde artikelen</h3>
-                <p className="text-gray-600 text-sm">Gerelateerde artikelen worden hier weergegeven...</p>
-              </div>
+              {/* Related Articles */}
+              {relatedArticles && relatedArticles.length > 0 && (
+                <div className="mt-8 pt-6 border-t border-gray-200">
+                  <h3 className="text-lg font-bold text-gray-900 mb-4">Gerelateerde artikelen</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {relatedArticles.map((relatedArticle) => (
+                      <Link
+                        key={relatedArticle.id}
+                        href={`/artikel/${relatedArticle.slug}`}
+                        className="group block bg-gray-50 rounded-lg overflow-hidden hover:shadow-md transition-shadow"
+                      >
+                        {relatedArticle.image && (
+                          <div className="relative aspect-[16/9] w-full">
+                            <Image
+                              src={relatedArticle.image}
+                              alt={relatedArticle.title}
+                              fill
+                              className="object-cover"
+                              sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                            />
+                          </div>
+                        )}
+                        <div className="p-4">
+                          <div className="mb-2">
+                            <span className="text-xs font-bold text-[#0F47AF] uppercase tracking-wide">
+                              {relatedArticle.category}
+                            </span>
+                          </div>
+                          <h4 className="text-sm font-bold text-gray-900 group-hover:text-[#0F47AF] line-clamp-2 mb-2 transition-colors">
+                            {relatedArticle.title}
+                          </h4>
+                          <div className="flex items-center text-xs text-gray-500">
+                            <span>Door {relatedArticle.author.username}</span>
+                            <span className="mx-1">•</span>
+                            <span>{formatDate(relatedArticle.publishedAt?.toISOString() || relatedArticle.createdAt.toISOString())}</span>
+                          </div>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </article>
           
-          {/* Sidebar - Below article on mobile, right column on desktop */}
-          <aside className="lg:col-span-4 space-y-4 md:space-y-6">
+          {/* Sidebar - Below article on mobile, 1 col on tablet, 4 cols on desktop */}
+          <aside className="md:col-span-1 lg:col-span-4 space-y-4 md:space-y-6">
             
             {/* Net Binnen Widget */}
             <NetBinnenWidget />

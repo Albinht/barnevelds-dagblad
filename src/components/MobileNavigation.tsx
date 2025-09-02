@@ -63,41 +63,18 @@ export default function MobileNavigation() {
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
+        {/* Close Button */}
+        <button
+          onClick={() => setIsOpen(false)}
+          className="absolute top-4 right-4 p-2 text-gray-600 hover:text-gray-900 transition-colors"
+          aria-label="Close menu"
+        >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+        
         <div className="p-6 pt-16">
-          {/* Search Bar */}
-          <div className="mb-6">
-            <div className="relative">
-              <input
-                type="search"
-                placeholder="Zoeken..."
-                className="w-full px-4 py-3 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:border-brand-blue"
-              />
-              <button className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-              </button>
-            </div>
-          </div>
-
-          {/* Action Buttons */}
-          <div className="flex flex-col space-y-3 mb-6">
-            <Link 
-              href="/abonneren"
-              onClick={handleLinkClick}
-              className="bg-brand-yellow text-black font-bold px-4 py-3 rounded-lg text-center hover:bg-yellow-400 transition-colors"
-            >
-              Abonneren
-            </Link>
-            <Link 
-              href="/inloggen"
-              onClick={handleLinkClick}
-              className="bg-brand-darkred text-white font-bold px-4 py-3 rounded-lg text-center hover:bg-red-800 transition-colors"
-            >
-              Inloggen
-            </Link>
-          </div>
-
           {/* Main Navigation */}
           <nav className="border-t border-gray-200 pt-6">
             <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Hoofdmenu</h3>

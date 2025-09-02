@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { Article } from '@/types/article'
-import { getArticles } from '@/lib/articles'
+import { getRelatedArticles } from '@/lib/articles-db'
 import { formatDateShort } from '@/lib/dateUtils'
 
 interface RelatedArticlesProps {
@@ -13,32 +13,12 @@ export default async function RelatedArticles({
   currentArticle, 
   limit = 3 
 }: RelatedArticlesProps) {
-  const articles = await getArticles()
-  
-  // Find related articles based on:
-  // 1. Same category
-  // 2. Shared tags
-  // 3. Exclude current article
-  const relatedArticles = articles
-    .filter(article => article.id !== currentArticle.id)
-    .map(article => {
-      let relevanceScore = 0
-      
-      // Same category = +3 points
-      if (article.category === currentArticle.category) {
-        relevanceScore += 3
-      }
-      
-      // Shared tags = +1 point per shared tag
-      const sharedTags = article.tags?.filter(tag => 
-        currentArticle.tags?.includes(tag)
-      ) || []
-      relevanceScore += sharedTags.length
-      
-      return { ...article, relevanceScore }
-    })
-    .sort((a, b) => b.relevanceScore - a.relevanceScore)
-    .slice(0, limit)
+  // Get related articles from database (same category, most recent first)
+  const relatedArticles = await getRelatedArticles(
+    currentArticle.slug, 
+    currentArticle.category, 
+    limit
+  )
 
   if (relatedArticles.length === 0) {
     return null
@@ -79,7 +59,7 @@ export default async function RelatedArticles({
                     <span>{article.category}</span>
                     <span className="mx-1">•</span>
                     <span>
-                      {formatDateShort(article.timestamp)}
+                      {formatDateShort(article.publishedAt?.toISOString() || article.createdAt.toISOString())}
                     </span>
                     {article.premium && (
                       <>

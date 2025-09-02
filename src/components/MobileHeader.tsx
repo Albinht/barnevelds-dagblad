@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import MobileNavigation from './MobileNavigation'
+import MobileSearch from './MobileSearch'
 import BDLogo from './BDLogo'
 
 export default function MobileHeader() {
@@ -46,24 +47,11 @@ export default function MobileHeader() {
               <BDLogo size={mounted && isScrolled ? 40 : 45} />
             </Link>
             
-            {/* Action Buttons */}
-            <div className="flex items-center space-x-2">
-              <Link 
-                href="/abonneren"
-                className="bg-brand-yellow text-black font-bold px-3 py-1.5 rounded text-xs uppercase hover:bg-yellow-400 transition-colors"
-              >
-                Abonneren
-              </Link>
-              <Link 
-                href="/inloggen"
-                className="bg-brand-darkred text-white font-bold px-3 py-1.5 rounded text-xs uppercase hover:bg-red-800 transition-colors"
-              >
-                Inloggen
-              </Link>
+            {/* Search and Menu Buttons */}
+            <div className="flex items-center">
+              <MobileSearch />
+              <MobileNavigation />
             </div>
-            
-            {/* Hamburger Menu Button */}
-            <MobileNavigation />
           </div>
         </div>
       </header>
@@ -82,6 +70,9 @@ export default function MobileHeader() {
           </Link>
           <Link href="/digitale-krant" className="text-brand-blue font-bold">
             Digitale Krant
+          </Link>
+          <Link href="/112-meldingen" className="text-red-600 font-bold">
+            112 Meldingen
           </Link>
         </div>
       </div>

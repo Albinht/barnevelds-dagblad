@@ -1,13 +1,8 @@
 import Link from 'next/link'
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
 
 export default function ArticleNotFound() {
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
-      <Header />
-      
-      <main className="flex-1 container mx-auto px-4 py-12 max-w-4xl">
+    <div className="container mx-auto px-4 py-12 max-w-4xl">
         <div className="text-center">
           {/* 404 Icon */}
           <div className="mx-auto w-24 h-24 bg-[#0F47AF] rounded-full flex items-center justify-center mb-8">
@@ -94,9 +89,6 @@ export default function ArticleNotFound() {
             </div>
           </div>
         </div>
-      </main>
-      
-      <Footer />
     </div>
   )
 }

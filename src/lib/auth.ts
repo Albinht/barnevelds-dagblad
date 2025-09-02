@@ -1,12 +1,21 @@
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
-import { cookies } from 'next/headers'
 import type { AuthUser, JWTPayload } from '@/types/auth'
 import { prisma } from '@/lib/prisma'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/lib/nextauth'
 
-const JWT_SECRET = process.env.JWT_SECRET!
-const ADMIN_USERNAME = process.env.ADMIN_USERNAME!
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD!
+const JWT_SECRET = process.env.JWT_SECRET
+const ADMIN_USERNAME = process.env.ADMIN_USERNAME
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD
+
+if (!JWT_SECRET) {
+  throw new Error('JWT_SECRET environment variable is required')
+}
+
+if (!ADMIN_USERNAME || !ADMIN_PASSWORD) {
+  throw new Error('ADMIN_USERNAME and ADMIN_PASSWORD environment variables are required')
+}
 
 // Validate admin credentials (for backward compatibility)
 export async function validateCredentials(username: string, password: string): Promise<boolean> {
@@ -23,33 +32,46 @@ export async function validateCredentials(username: string, password: string): P
       where: { username }
     })
     
-    if (!user) return false
+    if (!user || !user.password) return false
     
-    return bcrypt.compare(password, user.password)
+    return await bcrypt.compare(password, user.password)
   } catch (error) {
     console.error('Database authentication error:', error)
     // Fallback to hardcoded credentials if database is not available
-    if (username === ADMIN_USERNAME) {
+    if (username === ADMIN_USERNAME && ADMIN_PASSWORD) {
       if (process.env.NODE_ENV === 'development') {
         return password === ADMIN_PASSWORD
       }
-      return bcrypt.compare(password, ADMIN_PASSWORD)
+      return await bcrypt.compare(password, ADMIN_PASSWORD)
     }
     return false
   }
 }
 
-// Generate JWT token
-export function generateToken(username: string, userId?: string): string {
+// Generate JWT token with shorter expiry for better security
+export function generateToken(username: string, userId?: string, role: string = 'ADMIN'): string {
+  if (!JWT_SECRET) {
+    throw new Error('JWT_SECRET is not configured')
+  }
+  
   return jwt.sign(
-    { username, userId: userId || 'dev-user' },
+    { 
+      username, 
+      userId: userId || 'dev-user', 
+      role,
+      iat: Math.floor(Date.now() / 1000)
+    },
     JWT_SECRET,
-    { expiresIn: '30d' }
+    { expiresIn: '24h' } // Reduced from 30d to 24h for better security
   )
 }
 
 // Verify JWT token
 export function verifyToken(token: string): JWTPayload | null {
+  if (!JWT_SECRET) {
+    return null
+  }
+  
   try {
     return jwt.verify(token, JWT_SECRET) as JWTPayload
   } catch {
@@ -57,20 +79,16 @@ export function verifyToken(token: string): JWTPayload | null {
   }
 }
 
-// Get current session from cookies
+// Get current session - now uses NextAuth
 export async function getCurrentSession(): Promise<AuthUser | null> {
   try {
-    const cookieStore = await cookies()
-    const token = cookieStore.get('auth-token')?.value
+    const session = await getServerSession(authOptions)
     
-    if (!token) return null
-    
-    const payload = verifyToken(token)
-    if (!payload) return null
+    if (!session?.user?.email) return null
     
     return {
-      username: payload.username,
-      loginTime: new Date(payload.iat * 1000).toISOString()
+      username: session.user.name || session.user.email,
+      loginTime: new Date().toISOString()
     }
   } catch {
     return null
@@ -90,6 +108,10 @@ export async function hashPassword(password: string): Promise<string> {
 
 // Create or get admin user in database
 export async function ensureAdminUser() {
+  if (!ADMIN_USERNAME || !ADMIN_PASSWORD) {
+    throw new Error('ADMIN_USERNAME and ADMIN_PASSWORD must be configured')
+  }
+  
   try {
     const existingUser = await prisma.user.findUnique({
       where: { username: ADMIN_USERNAME }

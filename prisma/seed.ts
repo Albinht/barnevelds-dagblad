@@ -40,28 +40,30 @@ type BedrijfData = {
 async function main() {
   console.log('🌱 Starting database seed...')
   
-  // Create admin user
+  // Create admin user (compatible with NextAuth schema)
   const adminPassword = await bcrypt.hash('admin123', 12)
   const adminUser = await prisma.user.upsert({
-    where: { username: 'editor' },
+    where: { email: 'editor@barneveldsdagblad.nl' },
     update: {},
     create: {
-      username: 'editor',
       email: 'editor@barneveldsdagblad.nl',
+      username: 'editor',
+      name: 'Editor',
       password: adminPassword,
       role: 'ADMIN'
     }
   })
   console.log('✅ Admin user created')
   
-  // Create editor user
+  // Create editor user (compatible with NextAuth schema)
   const editorPassword = await bcrypt.hash('editor123', 12)
   const editorUser = await prisma.user.upsert({
-    where: { username: 'redacteur' },
+    where: { email: 'redacteur@barneveldsdagblad.nl' },
     update: {},
     create: {
-      username: 'redacteur',
       email: 'redacteur@barneveldsdagblad.nl',
+      username: 'redacteur', 
+      name: 'Redacteur',
       password: editorPassword,
       role: 'EDITOR'
     }

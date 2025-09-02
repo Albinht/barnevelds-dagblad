@@ -1,10 +1,8 @@
 import { notFound } from 'next/navigation'
 import { Metadata } from 'next'
 import ArticleLayout from '@/components/ArticleLayout'
-import { getArticles } from '@/lib/articles'
+import { getArticleBySlug, getAllArticles, getRelatedArticles } from '@/lib/articles-db'
 import { getFeaturedBedrijven } from '@/lib/bedrijven'
-import { Article } from '@/types/article'
-import { generateArticleMetadata, generateArticleJsonLd } from '@/lib/articleSEO'
 
 interface ArticlePageProps {
   params: {
@@ -12,34 +10,43 @@ interface ArticlePageProps {
   }
 }
 
-// Generate static params for all articles
-export async function generateStaticParams() {
-  const articles = await getArticles()
-  
-  return articles.map((article) => ({
-    slug: article.slug,
-  }))
-}
 
-// Generate metadata for SEO using centralized system
+// Generate metadata for SEO
 export async function generateMetadata({ params }: ArticlePageProps): Promise<Metadata> {
   const { slug } = await params
-  const articles = await getArticles()
-  const article = articles.find((a) => a.slug === slug)
+  const article = await getArticleBySlug(slug)
 
   if (!article) {
     return {
       title: 'Artikel niet gevonden | Barnevelds Dagblad',
+      description: 'Het opgevraagde artikel kon niet worden gevonden.'
     }
   }
 
-  return generateArticleMetadata(article)
+  return {
+    title: `${article.title} | Barnevelds Dagblad`,
+    description: article.excerpt,
+    openGraph: {
+      title: article.title,
+      description: article.excerpt,
+      images: article.image ? [article.image] : undefined,
+      type: 'article',
+      publishedTime: article.publishedAt?.toISOString(),
+      authors: [article.author.username],
+      siteName: 'Barnevelds Dagblad'
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: article.title,
+      description: article.excerpt,
+      images: article.image ? [article.image] : undefined
+    }
+  }
 }
 
 export default async function ArticlePage({ params }: ArticlePageProps) {
   const { slug } = await params
-  const articles = await getArticles()
-  const article = articles.find((a) => a.slug === slug)
+  const article = await getArticleBySlug(slug)
 
   if (!article) {
     notFound()
@@ -47,12 +54,51 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
   // Load featured bedrijven for spotlight
   const featuredBedrijven = await getFeaturedBedrijven()
+  
+  // Load related articles from same category
+  const relatedArticles = await getRelatedArticles(article.slug, article.category, 3)
 
-  // Use actual article content if available, otherwise generate mock content
-  const articleContent = article.content || generateMockContent(article)
+  // Use actual article content from database
+  const articleContent = article.content || `<p>Geen content beschikbaar voor dit artikel.</p>`
   
   // Generate structured data
-  const jsonLd = generateArticleJsonLd(article)
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "NewsArticle",
+    "headline": article.title,
+    "description": article.excerpt,
+    "image": article.image,
+    "author": {
+      "@type": "Person",
+      "name": article.author.username
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Barnevelds Dagblad"
+    },
+    "datePublished": article.publishedAt?.toISOString(),
+    "dateModified": article.updatedAt.toISOString()
+  }
+
+  // Convert database article to component format
+  const componentArticle = {
+    id: article.id,
+    slug: article.slug,
+    title: article.title,
+    excerpt: article.excerpt,
+    summary: article.summary,
+    content: article.content,
+    image: article.image,
+    category: article.category,
+    tags: article.tags,
+    premium: article.premium,
+    featured: article.featured,
+    views: article.views,
+    publishedAt: article.publishedAt?.toISOString() || article.createdAt.toISOString(),
+    timestamp: article.createdAt.toISOString(),
+    author: article.author.username,
+    comments: 0 // Default value, can be updated with actual comment count
+  }
 
   return (
     <>
@@ -62,40 +108,10 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       
-      <ArticleLayout article={article} featuredBedrijven={featuredBedrijven}>
+      <ArticleLayout article={componentArticle} featuredBedrijven={featuredBedrijven} relatedArticles={relatedArticles}>
         <div dangerouslySetInnerHTML={{ __html: articleContent }} />
       </ArticleLayout>
     </>
   )
 }
 
-// Mock content generator - will be replaced with actual article.content field
-function generateMockContent(article: Article): string {
-  return `
-    <p><strong>${article.excerpt}</strong></p>
-    
-    <p>Dit is de volledige inhoud van het artikel "${article.title}". In een echte implementatie zou deze content komen uit het content veld van het artikel object.</p>
-    
-    <p>Het artikel werd gepubliceerd door ${article.author} en valt onder de categorie "${article.category}". ${article.premium ? 'Dit is een premium artikel.' : 'Dit artikel is gratis toegankelijk.'}</p>
-    
-    <h2>Meer details</h2>
-    <p>Hier zou de volledige artikelinhoud staan met alle details, quotes, en bronvermeldingen. De content zou kunnen worden opgeslagen als HTML, Markdown, of via een headless CMS.</p>
-    
-    <blockquote>"Dit is een voorbeeld quote die de kern van het verhaal samenvat." - ${article.author}</blockquote>
-    
-    <p>Voor de toekomst kan deze implementatie worden uitgebreid met:</p>
-    
-    <ul>
-      <li>Rich text content van een CMS</li>
-      <li>Embedded media (video's, audio)</li>
-      <li>Interactive elementen</li>
-      <li>Related articles suggestions</li>
-      <li>Comment systeem</li>
-    </ul>
-    
-    <h3>Technische mogelijkheden</h3>
-    <p>Het systeem ondersteunt verschillende content formaten en kan eenvoudig worden geïntegreerd met bestaande CMS-systemen.</p>
-    
-    <p><strong>Tags:</strong> ${article.tags?.join(', ') || 'Geen tags'}</p>
-  `
-}

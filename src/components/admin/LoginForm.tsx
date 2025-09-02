@@ -68,7 +68,7 @@ export default function LoginForm() {
                   name="username"
                   type="text"
                   required
-                  placeholder="Enter: editor"
+                  placeholder="Username"
                   className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                   value={credentials.username}
                   onChange={(e) => setCredentials(prev => ({ ...prev, username: e.target.value }))}
@@ -84,7 +84,7 @@ export default function LoginForm() {
                   name="password"
                   type="password"
                   required
-                  placeholder="Enter: admin123"
+                  placeholder="Password"
                   className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                   value={credentials.password}
                   onChange={(e) => setCredentials(prev => ({ ...prev, password: e.target.value }))}
@@ -100,21 +100,23 @@ export default function LoginForm() {
               {isLoading ? 'Signing in...' : 'Sign In'}
             </button>
 
-            {/* Development Credentials - Prominent Display */}
-            <div className="mt-6 p-4 bg-yellow-50 border-l-4 border-yellow-400 rounded-r-md">
-              <div className="text-center">
-                <p className="text-sm font-medium text-yellow-800 mb-2">🔑 Development Login</p>
-                <div className="space-y-1">
-                  <p className="text-sm text-gray-700">
-                    Username: <span className="font-bold text-gray-900 bg-gray-200 px-2 py-1 rounded">editor</span>
-                  </p>
-                  <p className="text-sm text-gray-700">
-                    Password: <span className="font-bold text-gray-900 bg-gray-200 px-2 py-1 rounded">admin123</span>
-                  </p>
+            {/* Development Credentials - Only in development */}
+            {process.env.NODE_ENV === 'development' && (
+              <div className="mt-6 p-4 bg-yellow-50 border-l-4 border-yellow-400 rounded-r-md">
+                <div className="text-center">
+                  <p className="text-sm font-medium text-yellow-800 mb-2">🔑 Development Login</p>
+                  <div className="space-y-1">
+                    <p className="text-sm text-gray-700">
+                      Username: <span className="font-bold text-gray-900 bg-gray-200 px-2 py-1 rounded">editor</span>
+                    </p>
+                    <p className="text-sm text-gray-700">
+                      Password: <span className="font-bold text-gray-900 bg-gray-200 px-2 py-1 rounded">admin123</span>
+                    </p>
+                  </div>
+                  <p className="text-xs text-yellow-700 mt-2">Use these credentials to log in</p>
                 </div>
-                <p className="text-xs text-yellow-700 mt-2">Use these credentials to log in</p>
               </div>
-            </div>
+            )}
           </div>
         </form>
       </div>

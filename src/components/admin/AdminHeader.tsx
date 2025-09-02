@@ -1,8 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { signOut } from 'next-auth/react'
 
 interface AdminHeaderProps {
   username?: string
@@ -10,14 +10,14 @@ interface AdminHeaderProps {
 
 export default function AdminHeader({ username }: AdminHeaderProps) {
   const [isLoggingOut, setIsLoggingOut] = useState(false)
-  const router = useRouter()
 
   const handleLogout = async () => {
     setIsLoggingOut(true)
     try {
-      await fetch('/api/auth/logout', { method: 'POST' })
-      router.push('/login')
-      router.refresh()
+      await signOut({ 
+        callbackUrl: '/login',
+        redirect: true 
+      })
     } catch (error) {
       console.error('Logout error:', error)
       setIsLoggingOut(false)
