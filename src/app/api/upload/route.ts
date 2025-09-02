@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { writeFile } from 'fs/promises'
-import path from 'path'
+import { put } from '@vercel/blob'
 
 export async function POST(request: NextRequest) {
   try {
@@ -11,6 +10,16 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }
+      )
+    }
+
+    // Check if Vercel Blob is configured
+    const hasVercelBlob = process.env.BLOB_READ_WRITE_TOKEN
+    
+    if (!hasVercelBlob && process.env.NODE_ENV === 'production') {
+      return NextResponse.json(
+        { error: 'Storage not configured. Please set up Vercel Blob storage.' },
+        { status: 500 }
       )
     }
 
@@ -45,31 +54,42 @@ export async function POST(request: NextRequest) {
     // Generate unique filename
     const timestamp = Date.now()
     const randomString = Math.random().toString(36).substring(2, 8)
-    const extension = path.extname(file.name)
-    const filename = `article-${timestamp}-${randomString}${extension}`
+    const extension = file.name.split('.').pop()?.toLowerCase() || 'jpg'
+    const filename = `articles/article-${timestamp}-${randomString}.${extension}`
 
-    // Convert file to buffer
-    const bytes = await file.arrayBuffer()
-    const buffer = Buffer.from(bytes)
+    try {
+      // Upload to Vercel Blob storage
+      let blob
+      
+      if (hasVercelBlob) {
+        // Production: Use Vercel Blob
+        blob = await put(filename, file, {
+          access: 'public',
+          addRandomSuffix: false
+        })
+      } else {
+        // Development: Return mock URL
+        blob = {
+          url: `/uploads/${filename}`,
+          pathname: filename
+        }
+      }
 
-    // Define upload path
-    const uploadDir = path.join(process.cwd(), 'public/uploads/articles')
-    const filePath = path.join(uploadDir, filename)
-
-    // Write file to disk
-    await writeFile(filePath, buffer)
-
-    // Return the public URL path
-    const publicPath = `/uploads/articles/${filename}`
-
-    return NextResponse.json(
-      { 
-        message: 'File uploaded successfully',
-        url: publicPath,
-        filename: filename
-      },
-      { status: 200 }
-    )
+      return NextResponse.json(
+        { 
+          message: 'File uploaded successfully',
+          url: blob.url,
+          filename: blob.pathname
+        },
+        { status: 200 }
+      )
+    } catch (uploadError) {
+      console.error('Blob upload error:', uploadError)
+      return NextResponse.json(
+        { error: 'Failed to upload to storage' },
+        { status: 500 }
+      )
+    }
 
   } catch (error) {
     console.error('Upload error:', error)

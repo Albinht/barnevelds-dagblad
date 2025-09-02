@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { writeFile, mkdir } from 'fs/promises'
-import path from 'path'
+import { put } from '@vercel/blob'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/nextauth'
-import fs from 'fs'
 
 export async function POST(request: NextRequest) {
   console.log('=== Upload endpoint called ===')
@@ -19,12 +17,22 @@ export async function POST(request: NextRequest) {
     
     // For development, allow uploads if no database is connected
     const isDevelopment = process.env.NODE_ENV === 'development'
+    const hasVercelBlob = process.env.BLOB_READ_WRITE_TOKEN
     
     if (!session?.user?.email && !isDevelopment) {
       console.log('Upload failed: User not authenticated')
       return NextResponse.json(
         { error: 'Unauthorized - Please log in first' },
         { status: 401 }
+      )
+    }
+
+    // Check if Vercel Blob is configured
+    if (!hasVercelBlob && process.env.NODE_ENV === 'production') {
+      console.log('Upload failed: Vercel Blob not configured')
+      return NextResponse.json(
+        { error: 'Storage not configured. Please set up Vercel Blob storage.' },
+        { status: 500 }
       )
     }
 
@@ -76,79 +84,50 @@ export async function POST(request: NextRequest) {
     // Generate unique filename
     const timestamp = Date.now()
     const randomString = Math.random().toString(36).substring(2, 8)
-    const extension = path.extname(file.name).toLowerCase() || '.jpg'
-    const filename = `article-${timestamp}-${randomString}${extension}`
+    const extension = file.name.split('.').pop()?.toLowerCase() || 'jpg'
+    const filename = `articles/article-${timestamp}-${randomString}.${extension}`
 
-    // Convert file to buffer
-    let buffer: Buffer
-    try {
-      const bytes = await file.arrayBuffer()
-      buffer = Buffer.from(bytes)
-      console.log(`File converted to buffer: ${buffer.length} bytes`)
-    } catch (bufferError) {
-      console.error('Buffer conversion error:', bufferError)
-      return NextResponse.json(
-        { error: 'Failed to process file' },
-        { status: 500 }
-      )
-    }
+    console.log('Uploading to Vercel Blob:', filename)
 
-    // Create the uploads directory if it doesn't exist
-    const uploadDir = path.join(process.cwd(), 'public', 'uploads', 'articles')
-    console.log('Upload directory:', uploadDir)
-    
     try {
-      // Check if directory exists
-      if (!fs.existsSync(uploadDir)) {
-        console.log('Creating upload directory...')
-        await mkdir(uploadDir, { recursive: true })
-        console.log('Upload directory created')
+      // Upload to Vercel Blob storage
+      let blob
+      
+      if (hasVercelBlob) {
+        // Production: Use Vercel Blob
+        blob = await put(filename, file, {
+          access: 'public',
+          addRandomSuffix: false
+        })
+        console.log('File uploaded to Vercel Blob:', blob.url)
       } else {
-        console.log('Upload directory already exists')
+        // Development: Return mock URL
+        console.log('Development mode: Returning mock URL')
+        blob = {
+          url: `/uploads/${filename}`,
+          pathname: filename,
+          contentType: file.type,
+          contentDisposition: `inline; filename="${file.name}"`
+        }
       }
-    } catch (dirError) {
-      console.error('Directory creation error:', dirError)
+
+      console.log('Upload successful, URL:', blob.url)
+      console.log('=== Upload complete ===')
+
+      return NextResponse.json({ 
+        url: blob.url,
+        filename: blob.pathname,
+        size: file.size,
+        type: file.type,
+        message: 'Upload successful'
+      })
+    } catch (uploadError) {
+      console.error('Blob upload error:', uploadError)
       return NextResponse.json(
-        { error: 'Failed to create upload directory' },
+        { error: 'Failed to upload to storage' },
         { status: 500 }
       )
     }
-
-    // Save the file
-    const filepath = path.join(uploadDir, filename)
-    console.log('Saving file to:', filepath)
-    
-    try {
-      await writeFile(filepath, buffer)
-      console.log('File saved successfully')
-      
-      // Verify file was saved
-      if (!fs.existsSync(filepath)) {
-        throw new Error('File was not saved properly')
-      }
-      
-      const stats = fs.statSync(filepath)
-      console.log(`File verified: ${stats.size} bytes on disk`)
-    } catch (writeError) {
-      console.error('File write error:', writeError)
-      return NextResponse.json(
-        { error: 'Failed to save file to disk' },
-        { status: 500 }
-      )
-    }
-
-    // Return the public URL
-    const url = `/uploads/articles/${filename}`
-    console.log('Upload successful, URL:', url)
-    console.log('=== Upload complete ===')
-
-    return NextResponse.json({ 
-      url,
-      filename,
-      size: file.size,
-      type: file.type,
-      message: 'Upload successful'
-    })
   } catch (error) {
     console.error('=== Upload error ===')
     console.error('Error details:', {
