@@ -168,6 +168,10 @@ export async function POST(request: Request) {
       finalContent = `${body.content}\n\n<p class="image-credit text-sm text-gray-600 italic mt-2">${body.imageCredit}</p>`
     }
     
+    // 8.6. Create proper timestamp
+    const now = new Date()
+    console.log(`[n8n Webhook] Creating article at: ${now.toISOString()} (Local: ${now.toLocaleString('nl-NL', { timeZone: 'Europe/Amsterdam' })})`)
+    
     // 9. Create article in database
     const article = await prisma.article.create({
       data: {
@@ -182,7 +186,7 @@ export async function POST(request: Request) {
         premium: body.premium || false,
         featured: body.featured || false,
         published: true, // Auto-publish n8n articles
-        publishedAt: new Date(),
+        publishedAt: now,
         authorName,
         authorId: userId,
         views: 0
