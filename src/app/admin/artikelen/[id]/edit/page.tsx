@@ -64,7 +64,7 @@ export default function EditArticlePage({ params }: EditArticlePageProps) {
           category: data.category || '',
           premium: data.premium || false,
           author: data.authorName || data.author?.username || data.author?.email || 'Redactie',
-          publishedAt: data.publishedAt ? data.publishedAt.split('T')[0] : '',
+          publishedAt: data.publishedAt ? new Date(data.publishedAt).toISOString().slice(0, 16) : new Date().toISOString().slice(0, 16),
           tags: Array.isArray(data.tags) ? data.tags.join(', ') : '',
           slug: data.slug || ''
         })
@@ -386,10 +386,10 @@ export default function EditArticlePage({ params }: EditArticlePageProps) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label htmlFor="publishedAt" className="block text-sm font-medium text-gray-700 mb-2">
-              Publication Date
+              Publicatiedatum & tijd
             </label>
             <input
-              type="date"
+              type="datetime-local"
               id="publishedAt"
               name="publishedAt"
               value={formData.publishedAt}

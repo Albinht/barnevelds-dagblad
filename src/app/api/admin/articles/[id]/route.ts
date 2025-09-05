@@ -96,7 +96,15 @@ export async function PUT(request: Request, { params }: Params) {
     if (body.published && body.publishedAt === undefined) {
       updateData.publishedAt = new Date()
     } else if (body.publishedAt) {
-      updateData.publishedAt = new Date(body.publishedAt)
+      // If only date is provided (YYYY-MM-DD), add current time
+      if (typeof body.publishedAt === 'string' && body.publishedAt.length === 10) {
+        const now = new Date()
+        const hours = now.getHours().toString().padStart(2, '0')
+        const minutes = now.getMinutes().toString().padStart(2, '0')
+        updateData.publishedAt = new Date(`${body.publishedAt}T${hours}:${minutes}:00`)
+      } else {
+        updateData.publishedAt = new Date(body.publishedAt)
+      }
     }
     
     const article = await prisma.article.update({

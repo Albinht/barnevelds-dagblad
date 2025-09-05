@@ -18,7 +18,7 @@ export default function NewArticlePage() {
     author: 'Redactie', // Default author
     premium: false,
     published: true,  // Default to published
-    publishedAt: new Date().toISOString().split('T')[0],
+    publishedAt: new Date().toISOString(),  // Full datetime instead of just date
     tags: '',
     slug: ''
   })
@@ -314,13 +314,13 @@ export default function NewArticlePage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label htmlFor="publishedAt" className="block text-sm font-medium text-gray-700 mb-2">
-              Publicatiedatum
+              Publicatiedatum & tijd
             </label>
             <input
-              type="date"
+              type="datetime-local"
               id="publishedAt"
               name="publishedAt"
-              value={formData.publishedAt}
+              value={formData.publishedAt.slice(0, 16)}  // Format for datetime-local
               onChange={handleChange}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
