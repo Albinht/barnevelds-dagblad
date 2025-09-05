@@ -117,7 +117,24 @@ export default function ArticleManagementPage() {
     setBulkActions([])
   }
 
-  const categories = [...new Set(articles.map(article => article.category))]
+  // Use fixed categories list matching API requirements
+  const categories = [
+    '112 Meldingen',
+    'Nieuws', 
+    'Sport',
+    'Show',
+    'Kijk Podcast',
+    'Puzzel',
+    'Geldmaand',
+    'Mijn Gemeente',
+    'Praat Mee',
+    'Auto',
+    'Geld',
+    'Koken & Eten',
+    'Wonen',
+    'Gezond',
+    'Achter de Schermen'
+  ]
 
   const filteredArticles = articles.filter(article => {
     const matchesSearch = article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
