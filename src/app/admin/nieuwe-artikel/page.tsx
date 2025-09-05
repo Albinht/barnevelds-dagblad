@@ -276,15 +276,21 @@ export default function NewArticlePage() {
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="">Selecteer categorie</option>
-              <option value="112">112 Meldingen</option>
-              <option value="Lokaal Nieuws">Lokaal Nieuws</option>
+              <option value="112 Meldingen">112 Meldingen</option>
+              <option value="Nieuws">Nieuws</option>
               <option value="Sport">Sport</option>
-              <option value="Politiek">Politiek</option>
-              <option value="Economie">Economie</option>
-              <option value="Cultuur">Cultuur</option>
-              <option value="Gezondheid">Gezondheid</option>
-              <option value="Technologie">Technologie</option>
-              <option value="Onderwijs">Onderwijs</option>
+              <option value="Show">Show</option>
+              <option value="Kijk Podcast">Kijk Podcast</option>
+              <option value="Puzzel">Puzzel</option>
+              <option value="Geldmaand">Geldmaand</option>
+              <option value="Mijn Gemeente">Mijn Gemeente</option>
+              <option value="Praat Mee">Praat Mee</option>
+              <option value="Auto">Auto</option>
+              <option value="Geld">Geld</option>
+              <option value="Koken & Eten">Koken & Eten</option>
+              <option value="Wonen">Wonen</option>
+              <option value="Gezond">Gezond</option>
+              <option value="Achter de Schermen">Achter de Schermen</option>
             </select>
           </div>
 
