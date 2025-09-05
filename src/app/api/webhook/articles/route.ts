@@ -37,6 +37,8 @@ interface ArticleData {
   category: string
   summary?: string
   image?: string
+  imageUrl?: string  // Alternative to 'image' for clarity
+  imageCredit?: string  // Credit/source for the image
   tags?: string[]
   source?: string
   sourceUrl?: string
@@ -159,6 +161,13 @@ export async function POST(request: Request) {
       authorName = body.authorName
     }
     
+    // 8.5. If imageCredit is provided, append it to the content
+    let finalContent = body.content
+    if (body.imageCredit && (body.imageUrl || body.image)) {
+      // Add image credit as HTML at the end of content
+      finalContent = `${body.content}\n\n<p class="image-credit text-sm text-gray-600 italic mt-2">${body.imageCredit}</p>`
+    }
+    
     // 9. Create article in database
     const article = await prisma.article.create({
       data: {
@@ -166,8 +175,8 @@ export async function POST(request: Request) {
         title: body.title,
         excerpt: body.excerpt,
         summary: body.summary || body.excerpt,
-        content: body.content,
-        image: body.image || '',
+        content: finalContent,
+        image: body.imageUrl || body.image || '',  // Support both imageUrl and image
         category: body.category,
         tags,
         premium: body.premium || false,
@@ -225,6 +234,6 @@ export async function GET(request: Request) {
     acceptedMethod: 'POST',
     requiredHeaders: ['X-API-Key'],
     requiredFields: ['title', 'excerpt', 'content', 'category'],
-    optionalFields: ['summary', 'image', 'tags', 'source', 'sourceUrl', 'premium', 'featured']
+    optionalFields: ['summary', 'image', 'imageUrl', 'imageCredit', 'tags', 'source', 'sourceUrl', 'premium', 'featured']
   })
 }
