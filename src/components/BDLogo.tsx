@@ -7,13 +7,14 @@ interface BDLogoProps {
 }
 
 export default function BDLogo({ size = 40, className = "", isOverlay = false }: BDLogoProps) {
-  const overlayClasses = isOverlay 
+  const overlayClasses = isOverlay
 
   return (
-    <div 
+    <div
       className={`flex items-center justify-center ${overlayClasses} ${className}`}
-      style={{ 
-        width: `${size}px`, 
+      style={{
+        maxWidth: `${size}px`,
+        width: '100%',
         height: `${size}px`
       }}
     >
@@ -22,7 +23,7 @@ export default function BDLogo({ size = 40, className = "", isOverlay = false }:
         alt="Barnevelds Dagblad Logo"
         width={size - 8}
         height={size - 8}
-        className="object-contain"
+        className="object-contain w-full h-full"
       />
     </div>
   )

@@ -174,3 +174,55 @@ enum Role {
   EDITOR
   MODERATOR
 }
+
+model Event {
+  id          String   @id @default(cuid())
+  title       String
+  description String   @db.Text
+  date        DateTime
+  time        String
+  location    String
+  category    String
+  organizer   String
+  price       String?
+  website     String?
+  image       String?
+  published   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([date])
+  @@index([category])
+  @@index([published])
+}
+
+model TrafficInfo {
+  id          String    @id @default(cuid())
+  type        String    // wegwerkzaamheden, file, ongeval, waarschuwing
+  location    String
+  description String    @db.Text
+  severity    String    // low, medium, high
+  startDate   DateTime?
+  endDate     DateTime?
+  active      Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([active])
+  @@index([severity])
+}
+
+model WeatherAlert {
+  id          String   @id @default(cuid())
+  type        String   // heat, cold, wind, storm, rain, snow
+  message     String   @db.Text
+  severity    String   // low, medium, high
+  active      Boolean  @default(true)
+  startDate   DateTime
+  endDate     DateTime
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([active])
+  @@index([severity])
+}

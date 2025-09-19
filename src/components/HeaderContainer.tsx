@@ -30,8 +30,10 @@ export default function HeaderContainer() {
         <div className={mounted && isScrolled ? 'invisible' : 'visible'}>
           <UtilityBar />
           <div className="relative">
-            <Link href="/" className="absolute top-5 left-8 xl:left-32 z-50 hover:scale-105 transition-transform duration-200">
-              <BDLogo size={105} isOverlay={true} />
+            <Link href="/" className="absolute top-5 left-4 md:left-8 xl:left-32 z-50 hover:scale-105 transition-transform duration-200">
+              <div className="w-[85px] md:w-[95px] xl:w-[105px]">
+                <BDLogo size={105} isOverlay={true} className="max-w-full" />
+              </div>
             </Link>
             <Header />
           </div>

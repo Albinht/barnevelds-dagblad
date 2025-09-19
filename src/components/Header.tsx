@@ -8,7 +8,7 @@ export default function Header() {
     <header className="bg-brand-blue hidden lg:block">
       <div className="container mx-auto px-4">
         {/* Desktop Navigation */}
-        <div className="flex items-center justify-between py-3 lg:pl-32">
+        <div className="flex items-center justify-between py-3 lg:pl-[110px] xl:pl-32">
           {/* Main Navigation */}
           <nav className="flex items-center flex-1">
             <ul className="flex items-center space-x-4 xl:space-x-8 font-newspaper font-bold uppercase text-white tracking-newspaper text-sm">

@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { sendEmail, EMAIL_CONFIG } from '@/lib/email'
+import { getNewsletterEmailTemplates } from '@/lib/email-templates'
 
 // Email validation function
 function isValidEmail(email: string): boolean {
@@ -10,7 +12,7 @@ function isValidEmail(email: string): boolean {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { email } = body
+    const { email, frequency, categories } = body
 
     // Validate email
     if (!email || typeof email !== 'string') {
@@ -27,61 +29,42 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Here you would integrate with your email service provider
-    // Examples: Mailchimp, Klaviyo, SendGrid, etc.
-    
-    // For now, we'll simulate a successful subscription
-    // Replace this with your actual email service integration
-    
-    /*
-    // Example Mailchimp integration:
-    const MAILCHIMP_API_KEY = process.env.MAILCHIMP_API_KEY
-    const MAILCHIMP_AUDIENCE_ID = process.env.MAILCHIMP_AUDIENCE_ID
-    const MAILCHIMP_SERVER_PREFIX = process.env.MAILCHIMP_SERVER_PREFIX
+    // Genereer email template
+    const { confirmationEmail } = getNewsletterEmailTemplates({
+      email,
+      frequency: frequency || 'daily',
+      categories: categories || {}
+    })
 
-    const response = await fetch(
-      `https://${MAILCHIMP_SERVER_PREFIX}.api.mailchimp.com/3.0/lists/${MAILCHIMP_AUDIENCE_ID}/members`,
-      {
-        method: 'POST',
-        headers: {
-          'Authorization': `apikey ${MAILCHIMP_API_KEY}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email_address: email,
-          status: 'subscribed',
-          tags: ['website-footer']
-        }),
-      }
-    )
+    // Stuur bevestigingsmail
+    const result = await sendEmail({
+      to: email,
+      subject: confirmationEmail.subject,
+      html: confirmationEmail.html
+    })
 
-    if (!response.ok) {
-      const errorData = await response.json()
-      if (errorData.title === 'Member Exists') {
-        return NextResponse.json(
-          { success: false, error: 'Dit e-mailadres is al aangemeld' },
-          { status: 400 }
-        )
-      }
-      throw new Error('Failed to subscribe to newsletter')
+    if (!result.success) {
+      console.error('Failed to send confirmation email:', result.error)
     }
-    */
 
-    // Simulate successful subscription
-    console.log(`Newsletter subscription: ${email}`)
-    
-    // TODO: Replace with actual email service integration
-    // You can integrate with services like:
-    // - Mailchimp
-    // - Klaviyo  
-    // - SendGrid
-    // - ConvertKit
-    // - Your own database + email service
+    // Stuur ook een notificatie naar admin
+    await sendEmail({
+      to: EMAIL_CONFIG.adminEmail,
+      subject: 'Nieuwe nieuwsbrief aanmelding',
+      html: `
+        <h2>Nieuwe nieuwsbrief aanmelding</h2>
+        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Frequentie:</strong> ${frequency || 'daily'}</p>
+      `
+    })
+
+    // Hier zou je normaal de email naar een database schrijven
+    console.log('Newsletter signup:', { email, frequency, categories })
 
     return NextResponse.json(
-      { 
-        success: true, 
-        message: 'Bedankt voor uw aanmelding! U ontvangt binnenkort een bevestiging.' 
+      {
+        success: true,
+        message: 'Bedankt voor uw aanmelding! U ontvangt binnenkort een bevestiging.'
       },
       { status: 200 }
     )

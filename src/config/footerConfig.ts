@@ -13,43 +13,50 @@ export const footerSections: FooterLinkSection[] = [
   {
     title: "Algemeen",
     links: [
-      { label: "Colofon", href: "/colofon" },
+      { label: "Over ons", href: "/over-ons" },
+      { label: "Onze missie", href: "/missie" },
+      { label: "Redactiestatuut", href: "/redactiestatuut" },
+      { label: "Partners", href: "/partners" },
       { label: "Auteursrecht", href: "/auteursrecht" },
-      { label: "Abonnementsvoorwaarden", href: "/abonnementsvoorwaarden" },
       { label: "Gebruiksvoorwaarden", href: "/gebruiksvoorwaarden" },
       { label: "Privacybeleid", href: "/privacy" },
-      { label: "Toegankelijkheidsverklaring", href: "/toegankelijkheid" },
       { label: "Cookiebeleid", href: "/cookies" },
-      { label: "Vacatures", href: "/vacatures" },
-      { label: "Privacy-instellingen", href: "/privacy-instellingen" }
+      { label: "Vacatures", href: "/vacatures" }
     ]
   },
   {
-    title: "Service", 
+    title: "Service",
     links: [
-      { label: "Klantenservice", href: "/klantenservice" },
-      { label: "Bezorgklacht indienen", href: "/bezorgklacht" },
-      { label: "Bezorging pauzeren", href: "/bezorging-pauzeren" },
-      { label: "Bezorgadres wijzigen", href: "/bezorgadres-wijzigen" },
+      { label: "Contact", href: "/contact" },
+      { label: "Tip de redactie", href: "/tip-redactie" },
+      { label: "Persbericht insturen", href: "/persbericht" },
       { label: "Adverteren", href: "/adverteren" },
-      { label: "Losse verkoop", href: "/losse-verkoop" }
+      { label: "Nieuwsbrief", href: "/nieuwsbrief" },
+      { label: "Veelgestelde vragen", href: "/faq" },
+      { label: "Correcties", href: "/correcties" }
     ]
   },
   {
-    title: "Mijn Omgeving",
+    title: "Rubrieken",
     links: [
-      { label: "Mijn account", href: "/account" },
-      { label: "Mijn abonnement(en)", href: "/mijn-abonnementen" }
+      { label: "112 meldingen", href: "/112-meldingen" },
+      { label: "Gemeentenieuws", href: "/gemeente" },
+      { label: "Evenementen", href: "/evenementen" },
+      { label: "Weer & Verkeer", href: "/weer" },
+      { label: "Historie Barneveld", href: "/historie" },
+      { label: "Opinie", href: "/opinie" }
     ]
   },
   {
-    title: "Meer BD",
+    title: "Voor echte Barnevelders",
     links: [
-      { label: "Abonnee worden", href: "/abonneren" },
-      { label: "Digitale krant", href: "/digitale-krant" },
-      { label: "Nieuwsbrieven", href: "/nieuwsbrieven" },
-      { label: "Webwinkel", href: "/webwinkel" },
-      { label: "RSS", href: "/rss" }
+      { label: "Familieberichten", href: "/familieberichten" },
+      { label: "In het zonnetje", href: "/in-het-zonnetje" },
+      { label: "Iets melden", href: "/iets-melden" },
+      { label: "Evenementenkalender", href: "/evenementenkalender" },
+      { label: "Verenigingsnieuws", href: "/verenigingsnieuws" },
+      { label: "Buurtinitiatieven", href: "/buurtinitiatieven" },
+      { label: "Lokale ondernemers", href: "/lokale-ondernemers" }
     ]
   }
 ]

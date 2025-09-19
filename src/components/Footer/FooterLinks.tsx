@@ -19,8 +19,8 @@ export default function FooterLinks() {
           <div className="grid grid-cols-4 gap-8 mb-8">
             {footerSections.map((section, index) => (
               <div key={section.title} className={
-                index === 0 ? 'ml-4' : 
-                index === footerSections.length - 1 ? 'mr-4' : 
+                index === 0 ? 'ml-4' :
+                index === footerSections.length - 1 ? 'mr-4' :
                 undefined
               }>
                 <h3 className="text-lg font-semibold text-gray-900 mb-4 font-newspaper">
