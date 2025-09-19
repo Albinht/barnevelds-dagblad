@@ -6,7 +6,7 @@ const BARNEVELD_LON = 5.5797
 
 // Cache configuration
 const CACHE_DURATION = 10 * 60 * 1000 // 10 minutes in milliseconds
-let cachedData: any = null
+let cachedData: unknown = null
 let cacheTime = 0
 
 // Weather code to Dutch description mapping
@@ -80,7 +80,7 @@ function getWindDirection(degrees: number): string {
   return directions[index]
 }
 
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   try {
     // Check cache
     const now = Date.now()

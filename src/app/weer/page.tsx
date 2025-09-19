@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import Image from 'next/image'
 
 interface WeatherData {
   temperature: number
@@ -137,7 +136,7 @@ export default function WeerPage() {
     return date.toLocaleTimeString('nl-NL', { hour: '2-digit', minute: '2-digit' })
   }
 
-  const getWindDirection = (direction: string) => {
+  const _getWindDirection = (direction: string) => {
     const directions: { [key: string]: string } = {
       'N': 'Noord',
       'NO': 'Noordoost',
@@ -316,7 +315,7 @@ export default function WeerPage() {
               <h2 className="text-xl font-bold text-gray-900 mb-4">Per uur</h2>
               <div className="bg-white rounded-lg shadow-sm p-4 overflow-x-auto">
                 <div className="flex space-x-4 min-w-max">
-                  {hourlyForecast.slice(0, 12).map((hour: any, index) => (
+                  {hourlyForecast.slice(0, 12).map((hour: { time: string; temperature: number; rainChance: number; icon: string; isCurrentHour?: boolean }, index) => (
                     <div key={index} className={`text-center min-w-[80px] ${hour.isCurrentHour ? 'bg-blue-50 rounded-lg p-2' : ''}`}>
                       <p className={`text-xs mb-1 ${hour.isCurrentHour ? 'text-blue-700 font-semibold' : 'text-gray-600'}`}>
                         {formatTime(hour.time, hour.isCurrentHour)}

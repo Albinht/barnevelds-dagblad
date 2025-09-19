@@ -1,7 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { Metadata } from 'next'
+import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -58,7 +57,7 @@ const sampleEvents: Event[] = [
 ]
 
 export default function EvenementenPage() {
-  const [events, setEvents] = useState<Event[]>(sampleEvents)
+  const [events] = useState<Event[]>(sampleEvents)
   const [selectedCategory, setSelectedCategory] = useState<string>('all')
   const [selectedMonth, setSelectedMonth] = useState<string>('all')
   const [showPastEvents, setShowPastEvents] = useState(false)

@@ -279,7 +279,7 @@ export default async function HistoriePage() {
             <div>
               <h3 className="text-lg font-bold text-gray-900 mb-2">Foto Archief</h3>
               <p className="text-sm text-gray-600 mb-4">
-                Bekijk duizenden historische foto's uit het Barneveldse archief. Van oude dorpsgezichten tot bijzondere gebeurtenissen.
+                Bekijk duizenden historische foto&apos;s uit het Barneveldse archief. Van oude dorpsgezichten tot bijzondere gebeurtenissen.
               </p>
               <button className="text-amber-600 hover:text-amber-700 font-semibold text-sm">
                 Bekijk foto archief →
@@ -297,7 +297,7 @@ export default async function HistoriePage() {
             <div>
               <h3 className="text-lg font-bold text-gray-900 mb-2">Deel uw verhaal</h3>
               <p className="text-sm text-gray-600 mb-4">
-                Heeft u een bijzonder verhaal, oude foto's of documenten over Barneveld? Deel ze met ons en help de geschiedenis levend te houden.
+                Heeft u een bijzonder verhaal, oude foto&apos;s of documenten over Barneveld? Deel ze met ons en help de geschiedenis levend te houden.
               </p>
               <Link href="/contact?subject=historie"
                     className="text-blue-600 hover:text-blue-700 font-semibold text-sm">
