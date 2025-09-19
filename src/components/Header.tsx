@@ -61,11 +61,11 @@ export default function Header() {
             >
               Abonneren
             </Link>
-            <Link 
-              href="/inloggen"
+            <Link
+              href="/admin/dashboard"
               className="bg-brand-darkred text-white font-bold px-4 py-2 rounded text-sm hover:bg-red-800 transition-colors"
             >
-              Inloggen
+              Admin
             </Link>
           </div>
         </div>
