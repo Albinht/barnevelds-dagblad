@@ -7,9 +7,10 @@ const prisma = new PrismaClient()
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const session = await getServerSession(authOptions)
 
     if (!session || (session.user.role !== 'ADMIN' && session.user.role !== 'EDITOR')) {
@@ -19,7 +20,7 @@ export async function PUT(
     const body = await request.json()
 
     const alert = await prisma.weatherAlert.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         type: body.type,
         message: body.message,
@@ -41,9 +42,10 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const session = await getServerSession(authOptions)
 
     if (!session || (session.user.role !== 'ADMIN' && session.user.role !== 'EDITOR')) {
@@ -51,7 +53,7 @@ export async function DELETE(
     }
 
     await prisma.weatherAlert.delete({
-      where: { id: params.id }
+      where: { id }
     })
 
     return NextResponse.json({ success: true })
