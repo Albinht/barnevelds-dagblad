@@ -35,11 +35,9 @@ export default function AdminTrafficPage() {
 
   useEffect(() => {
     if (status === 'unauthenticated') {
-      router.push('/auth/signin')
-    } else if (session?.user?.role !== 'ADMIN' && session?.user?.role !== 'EDITOR') {
-      router.push('/')
+      router.push('/login')
     }
-  }, [session, status, router])
+  }, [status, router])
 
   useEffect(() => {
     fetchTrafficInfo()
@@ -165,12 +163,16 @@ export default function AdminTrafficPage() {
     }
   }
 
-  if (loading) {
+  if (status === 'loading' || loading) {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="text-center">Laden...</div>
       </div>
     )
+  }
+
+  if (!session) {
+    return null
   }
 
   return (
