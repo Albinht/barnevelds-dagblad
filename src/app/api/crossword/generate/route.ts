@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getGenerator } from '@/lib/crossword/generator'
 import { prisma } from '@/lib/prisma'
 import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth'
+import { authOptions } from '@/lib/nextauth'
 
 export async function POST(request: NextRequest) {
   try {
