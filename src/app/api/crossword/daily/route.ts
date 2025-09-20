@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getGenerator } from '@/lib/crossword/generator'
+import { Prisma } from '@prisma/client'
 
 export async function GET(request: NextRequest) {
   try {
@@ -35,9 +36,11 @@ export async function GET(request: NextRequest) {
           title: generatedPuzzle.title,
           difficulty,
           gridSize: generatedPuzzle.gridSize,
-          grid: generatedPuzzle.grid,
-          clues: generatedPuzzle.clues,
-          solution: generatedPuzzle.solution
+          gridData: generatedPuzzle.grid as unknown as Prisma.InputJsonValue,
+          cluesAcross: generatedPuzzle.clues.across as unknown as Prisma.InputJsonValue,
+          cluesDown: generatedPuzzle.clues.down as unknown as Prisma.InputJsonValue,
+          solution: generatedPuzzle.solution as unknown as Prisma.InputJsonValue,
+          publishDate: new Date()
         }
       })
     }
@@ -47,8 +50,11 @@ export async function GET(request: NextRequest) {
       title: puzzle.title,
       difficulty: puzzle.difficulty,
       gridSize: puzzle.gridSize,
-      grid: puzzle.grid,
-      clues: puzzle.clues,
+      grid: puzzle.gridData,
+      clues: {
+        across: puzzle.cluesAcross,
+        down: puzzle.cluesDown
+      },
       // Don't send solution to client initially
       createdAt: puzzle.createdAt
     })

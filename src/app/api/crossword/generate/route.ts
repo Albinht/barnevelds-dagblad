@@ -3,6 +3,7 @@ import { getGenerator } from '@/lib/crossword/generator'
 import { prisma } from '@/lib/prisma'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/nextauth'
+import { Prisma } from '@prisma/client'
 
 export async function POST(request: NextRequest) {
   try {
@@ -29,9 +30,11 @@ export async function POST(request: NextRequest) {
         title: generatedPuzzle.title,
         difficulty,
         gridSize: generatedPuzzle.gridSize,
-        grid: generatedPuzzle.grid,
-        clues: generatedPuzzle.clues,
-        solution: generatedPuzzle.solution
+        gridData: generatedPuzzle.grid as unknown as Prisma.InputJsonValue,
+        cluesAcross: generatedPuzzle.clues.across as unknown as Prisma.InputJsonValue,
+        cluesDown: generatedPuzzle.clues.down as unknown as Prisma.InputJsonValue,
+        solution: generatedPuzzle.solution as unknown as Prisma.InputJsonValue,
+        publishDate: new Date()
       }
     })
 

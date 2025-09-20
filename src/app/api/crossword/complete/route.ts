@@ -81,7 +81,7 @@ async function calculateRank(puzzleId: string, score: number): Promise<number> {
 
   let betterScores = 0
   for (const completion of allCompletions) {
-    const compScore = (completion.progress as any)?.score || 0
+    const compScore = (completion.progress as { score?: number })?.score || 0
     if (compScore > score) betterScores++
   }
 

@@ -296,7 +296,7 @@ export default function BDCrossword({
           }
 
           // Assign the word number to this cell
-          newGrid[row][col].partOfAcross = wordNum || `across_${row}_${wordStart}`
+          newGrid[row][col].partOfAcross = wordNum || undefined
         }
       }
     }
@@ -318,7 +318,7 @@ export default function BDCrossword({
           }
 
           // Assign the word number to this cell
-          newGrid[row][col].partOfDown = wordNum || `down_${wordStart}_${col}`
+          newGrid[row][col].partOfDown = wordNum || undefined
         }
       }
     }
@@ -504,13 +504,15 @@ export default function BDCrossword({
 
     if (direction === 'across') {
       const clueNumber = grid[row][col].partOfAcross
-      if (clueNumber && puzzle.clues.across[clueNumber]) {
-        return { number: clueNumber, text: puzzle.clues.across[clueNumber], direction: 'Horizontaal' }
+      const acrossClues = puzzle.clues.across as Record<number, string>
+      if (clueNumber && acrossClues[clueNumber]) {
+        return { number: clueNumber, text: acrossClues[clueNumber], direction: 'Horizontaal' }
       }
     } else {
       const clueNumber = grid[row][col].partOfDown
-      if (clueNumber && puzzle.clues.down[clueNumber]) {
-        return { number: clueNumber, text: puzzle.clues.down[clueNumber], direction: 'Verticaal' }
+      const downClues = puzzle.clues.down as Record<number, string>
+      if (clueNumber && downClues[clueNumber]) {
+        return { number: clueNumber, text: downClues[clueNumber], direction: 'Verticaal' }
       }
     }
     return null

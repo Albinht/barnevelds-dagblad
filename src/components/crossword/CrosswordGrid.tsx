@@ -64,7 +64,7 @@ export default function CrosswordGrid({
     } else if (key === 'Tab') {
       e.preventDefault()
       // Find next word
-      moveToNextWord(x, y, e.shiftKey)
+      moveToNextWord(x, y)
     } else if (key.length === 1 && /^[a-zA-Z]$/.test(key)) {
       e.preventDefault()
       handleCellInput(x, y, key.toUpperCase())
