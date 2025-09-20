@@ -22,6 +22,7 @@ model User {
   comments      Comment[]
   sessions      Session[]
   accounts      Account[]
+  crosswordCompletions CrosswordCompletion[]
 }
 
 model Article {
@@ -225,4 +226,62 @@ model WeatherAlert {
 
   @@index([active])
   @@index([severity])
+}
+
+model HistoricalStory {
+  id          String   @id @default(cuid())
+  title       String
+  excerpt     String   @db.Text
+  content     String   @db.Text
+  period      String   // middeleeuwen, gouden-eeuw, 18e-eeuw, 19e-eeuw, 20e-eeuw, modern
+  year        String   // bijv. "13e eeuw", "1899", "1900-1950"
+  image       String?
+  tags        String[] // array van tags
+  published   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([published])
+  @@index([period])
+}
+
+model CrosswordPuzzle {
+  id            String   @id @default(cuid())
+  title         String
+  difficulty    String   // easy, medium, hard
+  gridSize      Int      @default(15)
+  gridData      Json     // 2D array met grid structuur
+  cluesAcross   Json     // Array van across clues
+  cluesDown     Json     // Array van down clues
+  solution      Json     // Complete oplossing
+  publishDate   DateTime
+  completions   Int      @default(0)
+  averageTime   Int?     // Gemiddelde tijd in seconden
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  userCompletions CrosswordCompletion[]
+
+  @@index([publishDate])
+  @@index([difficulty])
+}
+
+model CrosswordCompletion {
+  id          String   @id @default(cuid())
+  userId      String
+  puzzleId    String
+  progress    Json     // Huidige voortgang
+  completed   Boolean  @default(false)
+  timeSpent   Int      // Tijd in seconden
+  hintsUsed   Int      @default(0)
+  completedAt DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user        User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  puzzle      CrosswordPuzzle  @relation(fields: [puzzleId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, puzzleId])
+  @@index([userId])
+  @@index([puzzleId])
 }

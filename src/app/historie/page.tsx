@@ -1,19 +1,23 @@
-import { Metadata } from 'next'
+'use client'
+
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { getAllArticles } from '@/lib/articles-db'
-import { getArticles } from '@/lib/articles'
 import { formatDate } from '@/lib/dateUtils'
 import { Article } from '@/types/article'
 
-// Force dynamic rendering
-export const dynamic = 'force-dynamic'
-export const revalidate = 60
-
-export const metadata: Metadata = {
-  title: 'Historie Barneveld | Barnevelds Dagblad',
-  description: 'Ontdek de rijke geschiedenis van Barneveld. Historische verhalen, oude foto\'s en bijzondere gebeurtenissen uit het verleden.',
-  keywords: 'historie, geschiedenis, Barneveld, erfgoed, oude foto\'s, historisch, verhalen',
+interface HistoricalStory {
+  id: string
+  title: string
+  excerpt: string
+  content: string
+  period: string
+  year: string
+  image?: string
+  tags: string[]
+  published: boolean
+  createdAt: string
+  updatedAt: string
 }
 
 // Historical periods/categories
@@ -75,61 +79,80 @@ const historicalStories = [
   }
 ]
 
-export default async function HistoriePage() {
-  let articles: Article[] = []
+export default function HistoriePage() {
+  const [stories, setStories] = useState<HistoricalStory[]>([])
+  const [storiesByPeriod, setStoriesByPeriod] = useState<Record<string, HistoricalStory[]>>({})
+  const [articles, setArticles] = useState<Article[]>([])
+  const [loading, setLoading] = useState(true)
+  const [selectedPeriod, setSelectedPeriod] = useState<string>('all')
 
-  try {
-    // Try to get from database first
-    const dbArticles = await getAllArticles()
+  // Fetch historical stories from database
+  useEffect(() => {
+    fetchHistoricalStories()
+    fetchArticles()
+  }, [])
 
-    // Filter for historie articles
-    const filteredHistorieArticles = dbArticles.filter(article =>
-      article.published && (
-        article.category === 'Historie' ||
-        article.category === 'Geschiedenis' ||
-        article.tags?.includes('historie') ||
-        article.tags?.includes('geschiedenis')
-      )
-    )
-
-    if (filteredHistorieArticles.length > 0) {
-      articles = filteredHistorieArticles.map(article => ({
-        id: article.id,
-        slug: article.slug,
-        title: article.title,
-        excerpt: article.excerpt,
-        summary: article.summary,
-        content: article.content,
-        image: article.image,
-        category: article.category,
-        tags: article.tags,
-        premium: article.premium,
-        author: article.authorName || article.author.username || article.author.email,
-        publishedAt: article.publishedAt?.toISOString().split('T')[0] || '',
-        comments: 0,
-        timestamp: article.createdAt.toISOString()
-      }))
-    }
-  } catch (dbError) {
-    console.error('Database error:', dbError)
-
+  const fetchHistoricalStories = async () => {
     try {
-      const jsonArticles = await getArticles()
-      articles = jsonArticles.filter(article =>
-        article.category === 'Historie' ||
-        article.tags?.includes('historie')
-      )
-    } catch (jsonError) {
-      console.error('JSON fallback also failed:', jsonError)
+      const response = await fetch('/api/history')
+      const data = await response.json()
+
+      if (data.success) {
+        setStories(data.stories || [])
+        setStoriesByPeriod(data.storiesByPeriod || {})
+      } else {
+        // Use fallback hardcoded stories if database is empty
+        const fallbackStories = historicalStories.map(story => ({
+          ...story,
+          content: story.excerpt,
+          published: true,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        }))
+        setStories(fallbackStories)
+
+        // Group fallback stories by period
+        const grouped = fallbackStories.reduce((acc, story) => {
+          if (!acc[story.period]) {
+            acc[story.period] = []
+          }
+          acc[story.period].push(story)
+          return acc
+        }, {} as Record<string, HistoricalStory[]>)
+        setStoriesByPeriod(grouped)
+      }
+    } catch (error) {
+      console.error('Error fetching historical stories:', error)
+      // Use fallback on error
+      const fallbackStories = historicalStories.map(story => ({
+        ...story,
+        content: story.excerpt,
+        published: true,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      }))
+      setStories(fallbackStories)
+    } finally {
+      setLoading(false)
     }
   }
 
-  // Sort by date
-  articles.sort((a, b) => {
-    const dateA = new Date(a.publishedAt || a.timestamp || 0)
-    const dateB = new Date(b.publishedAt || b.timestamp || 0)
-    return dateB.getTime() - dateA.getTime()
-  })
+  const fetchArticles = async () => {
+    try {
+      const response = await fetch('/api/articles?category=Historie')
+      const data = await response.json()
+      if (data.articles) {
+        setArticles(data.articles)
+      }
+    } catch (error) {
+      console.error('Error fetching articles:', error)
+    }
+  }
+
+  // Filter stories by selected period
+  const filteredStories = selectedPeriod === 'all'
+    ? stories
+    : stories.filter(story => story.period === selectedPeriod)
 
   return (
     <div className="container mx-auto px-4 lg:px-8 py-4 lg:py-8 max-w-7xl">
@@ -152,67 +175,112 @@ export default async function HistoriePage() {
       {/* Timeline Navigation */}
       <div className="mb-8 overflow-x-auto">
         <div className="flex space-x-4 min-w-max">
+          <button
+            onClick={() => setSelectedPeriod('all')}
+            className={`rounded-lg p-4 transition-all min-w-[150px] ${
+              selectedPeriod === 'all'
+                ? 'bg-amber-600 text-white shadow-md'
+                : 'bg-white shadow-sm hover:shadow-md'
+            }`}
+          >
+            <h3 className="font-bold">Alle Periodes</h3>
+            <p className="text-sm opacity-80">Volledig overzicht</p>
+          </button>
           {historicalPeriods.map((period) => (
-            <div key={period.id} className="bg-white rounded-lg shadow-sm p-4 hover:shadow-md transition-shadow cursor-pointer min-w-[150px]">
-              <h3 className="font-bold text-gray-900">{period.name}</h3>
-              <p className="text-sm text-gray-600">{period.period}</p>
-            </div>
+            <button
+              key={period.id}
+              onClick={() => setSelectedPeriod(period.id)}
+              className={`rounded-lg p-4 transition-all min-w-[150px] ${
+                selectedPeriod === period.id
+                  ? 'bg-amber-600 text-white shadow-md'
+                  : 'bg-white shadow-sm hover:shadow-md'
+              }`}
+            >
+              <h3 className="font-bold">{period.name}</h3>
+              <p className="text-sm opacity-80">{period.period}</p>
+            </button>
           ))}
         </div>
       </div>
 
       {/* Featured Historical Stories */}
-      <div className="mb-12">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">Historische verhalen</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {historicalStories.map((story) => (
-            <article key={story.id} className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-lg transition-shadow">
-              {/* Story Image */}
-              <div className="relative aspect-[16/9] w-full bg-gray-200">
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
-                </div>
-              </div>
-
-              {/* Story Content */}
-              <div className="p-6">
-                {/* Period Badge */}
-                <div className="flex items-center gap-2 mb-3">
-                  <span className="inline-block bg-amber-600 text-white px-2 py-1 text-xs font-bold rounded uppercase tracking-wide">
-                    {story.year}
-                  </span>
-                </div>
-
-                {/* Story Title */}
-                <h3 className="text-xl font-bold text-gray-900 mb-3 line-clamp-2">
-                  {story.title}
-                </h3>
-
-                {/* Story Excerpt */}
-                <p className="text-gray-600 text-sm leading-relaxed mb-4 line-clamp-3">
-                  {story.excerpt}
-                </p>
-
-                {/* Tags */}
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {story.tags.map((tag) => (
-                    <span key={tag} className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">
-                      #{tag}
-                    </span>
-                  ))}
-                </div>
-
-                {/* Read More Link */}
-                <button className="text-amber-600 hover:text-amber-700 font-semibold text-sm">
-                  Lees meer →
-                </button>
-              </div>
-            </article>
-          ))}
+      {loading ? (
+        <div className="text-center py-12">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Verhalen laden...</p>
         </div>
-      </div>
+      ) : (
+        <div className="mb-12">
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">
+            {selectedPeriod === 'all' ? 'Alle Historische Verhalen' : `Verhalen uit ${historicalPeriods.find(p => p.id === selectedPeriod)?.name || selectedPeriod}`}
+          </h2>
+          {filteredStories.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredStories.map((story) => (
+                <article key={story.id} className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-lg transition-shadow">
+                  {/* Story Image */}
+                  {story.image ? (
+                    <div className="relative aspect-[16/9] w-full">
+                      <Image
+                        src={story.image}
+                        alt={story.title}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                  ) : (
+                    <div className="relative aspect-[16/9] w-full bg-gray-200">
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Story Content */}
+                  <div className="p-6">
+                    {/* Period Badge */}
+                    <div className="flex items-center gap-2 mb-3">
+                      <span className="inline-block bg-amber-600 text-white px-2 py-1 text-xs font-bold rounded uppercase tracking-wide">
+                        {story.year}
+                      </span>
+                    </div>
+
+                    {/* Story Title */}
+                    <h3 className="text-xl font-bold text-gray-900 mb-3 line-clamp-2">
+                      {story.title}
+                    </h3>
+
+                    {/* Story Excerpt */}
+                    <p className="text-gray-600 text-sm leading-relaxed mb-4 line-clamp-3">
+                      {story.excerpt}
+                    </p>
+
+                    {/* Tags */}
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {story.tags.slice(0, 3).map((tag) => (
+                        <span key={tag} className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">
+                          #{tag}
+                        </span>
+                      ))}
+                    </div>
+
+                    {/* Read More Link */}
+                    <button className="text-amber-600 hover:text-amber-700 font-semibold text-sm">
+                      Lees meer →
+                    </button>
+                  </div>
+                </article>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12 bg-gray-50 rounded-lg">
+              <p className="text-gray-600">Geen verhalen gevonden voor deze periode.</p>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Recent Articles */}
       {articles.length > 0 && (

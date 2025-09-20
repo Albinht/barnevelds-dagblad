@@ -16,7 +16,8 @@ import {
   PlusCircleIcon,
   DocumentTextIcon,
   EyeIcon,
-  ArrowLeftIcon
+  ArrowLeftIcon,
+  ClockIcon
 } from '@heroicons/react/24/outline'
 
 export default function AdminDashboard() {
@@ -76,6 +77,13 @@ export default function AdminDashboard() {
       icon: SunIcon,
       description: 'Beheer weerwaarschuwingen',
       color: 'bg-cyan-500'
+    },
+    {
+      title: 'Historie',
+      href: '/admin/history',
+      icon: ClockIcon,
+      description: 'Beheer historische verhalen',
+      color: 'bg-amber-500'
     },
     {
       title: 'Bedrijvengids',
