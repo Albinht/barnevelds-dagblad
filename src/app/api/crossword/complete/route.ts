@@ -30,8 +30,10 @@ export async function POST(request: NextRequest) {
       data: {
         puzzleId,
         userId,
-        completionTime,
-        score,
+        timeSpent: completionTime,
+        progress: { score },
+        completed: true,
+        completedAt: new Date(),
         hintsUsed
       }
     })
@@ -40,14 +42,10 @@ export async function POST(request: NextRequest) {
     const stats = await prisma.crosswordCompletion.aggregate({
       where: { puzzleId },
       _avg: {
-        score: true,
-        completionTime: true
+        timeSpent: true
       },
       _min: {
-        completionTime: true
-      },
-      _max: {
-        score: true
+        timeSpent: true
       },
       _count: true
     })
@@ -56,16 +54,14 @@ export async function POST(request: NextRequest) {
       success: true,
       completion: {
         id: completion.id,
-        score: completion.score,
-        completionTime: completion.completionTime,
+        score,
+        timeSpent: completion.timeSpent,
         rank: await calculateRank(puzzleId, score)
       },
       stats: {
         totalCompletions: stats._count,
-        averageScore: Math.round(stats._avg.score || 0),
-        averageTime: Math.round(stats._avg.completionTime || 0),
-        bestTime: stats._min.completionTime || 0,
-        bestScore: stats._max.score || 0
+        averageTime: Math.round(stats._avg.timeSpent || 0),
+        bestTime: stats._min.timeSpent || 0
       }
     })
   } catch (error) {
@@ -78,14 +74,16 @@ export async function POST(request: NextRequest) {
 }
 
 async function calculateRank(puzzleId: string, score: number): Promise<number> {
-  const betterScores = await prisma.crosswordCompletion.count({
-    where: {
-      puzzleId,
-      score: {
-        gt: score
-      }
-    }
+  // For now, return a basic rank - could be improved to check JSON progress field
+  const allCompletions = await prisma.crosswordCompletion.findMany({
+    where: { puzzleId, completed: true }
   })
+
+  let betterScores = 0
+  for (const completion of allCompletions) {
+    const compScore = (completion.progress as any)?.score || 0
+    if (compScore > score) betterScores++
+  }
 
   return betterScores + 1
 }

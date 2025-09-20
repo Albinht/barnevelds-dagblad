@@ -136,19 +136,7 @@ export default function WeerPage() {
     return date.toLocaleTimeString('nl-NL', { hour: '2-digit', minute: '2-digit' })
   }
 
-  const _getWindDirection = (direction: string) => {
-    const directions: { [key: string]: string } = {
-      'N': 'Noord',
-      'NO': 'Noordoost',
-      'O': 'Oost',
-      'ZO': 'Zuidoost',
-      'Z': 'Zuid',
-      'ZW': 'Zuidwest',
-      'W': 'West',
-      'NW': 'Noordwest'
-    }
-    return directions[direction] || direction
-  }
+  // Removed unused function _getWindDirection
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {

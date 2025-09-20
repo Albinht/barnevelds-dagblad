@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useRef } from 'react'
 import { Cell } from '@/lib/crossword/types'
 
 interface CrosswordGridProps {
@@ -92,11 +92,11 @@ export default function CrosswordGrid({
     }
   }
 
-  const moveToNextWord = (currentX: number, currentY: number, reverse: boolean = false) => {
+  const moveToNextWord = (currentX: number, currentY: number) => {
     // Simplified: just move to next numbered cell
     let found = false
-    let startY = currentY
-    let startX = currentX + 1
+    const startY = currentY
+    const startX = currentX + 1
 
     for (let y = startY; y < size && !found; y++) {
       for (let x = (y === startY ? startX : 0); x < size && !found; x++) {
@@ -172,8 +172,7 @@ export default function CrosswordGrid({
     return classes.join(' ')
   }
 
-  // Calculate cell size based on container
-  const cellSize = `calc((100% - ${size * 2}px) / ${size})`
+  // Cell size calculation removed - was unused
 
   return (
     <div className="w-full max-w-2xl mx-auto p-4">

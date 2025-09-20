@@ -94,7 +94,6 @@ export default function ProfessionalCrossword({ size = 9, puzzle = demoPuzzleDat
   const [isComplete, setIsComplete] = useState(false)
   const [showErrors, setShowErrors] = useState(false)
   const [score, setScore] = useState(0)
-  const [showKeyboard, setShowKeyboard] = useState(false)
   const inputRefs = useRef<(HTMLInputElement | null)[][]>([])
 
   // Initialize grid
@@ -219,6 +218,7 @@ export default function ProfessionalCrossword({ size = 9, puzzle = demoPuzzleDat
 
     // Check completion
     checkCompletion(newUserGrid)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userGrid, direction, grid, size])
 
   // Handle keyboard navigation
@@ -271,6 +271,7 @@ export default function ProfessionalCrossword({ size = 9, puzzle = demoPuzzleDat
       e.preventDefault()
       moveToPreviousCell(row, col)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [grid, userGrid, direction, size])
 
 

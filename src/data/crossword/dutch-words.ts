@@ -152,7 +152,7 @@ export const commonPatterns = {
   fourLetterEndings: ['HEID', 'LIJK', 'BAAR', 'LOOS'],
 }
 
-export default {
+const dutchWords = {
   threeLetterWords,
   fourLetterWords,
   fiveLetterWords,
@@ -160,3 +160,5 @@ export default {
   getWordsByDifficulty,
   getLocalWords,
 }
+
+export default dutchWords

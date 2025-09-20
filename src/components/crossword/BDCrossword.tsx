@@ -14,7 +14,6 @@ interface CellData {
 }
 
 interface CrosswordProps {
-  puzzleId?: string
   difficulty?: 'easy' | 'medium' | 'hard'
   onComplete?: (score: number, time: number) => void
 }
@@ -214,7 +213,6 @@ const puzzlesByDifficulty = {
 }
 
 export default function BDCrossword({
-  puzzleId,
   difficulty = 'easy',
   onComplete
 }: CrosswordProps) {
@@ -403,6 +401,7 @@ export default function BDCrossword({
     }
 
     checkCompletion(newUserGrid)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userGrid, direction, grid, size])
 
   // Handle keyboard

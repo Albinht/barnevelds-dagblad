@@ -16,7 +16,6 @@ import {
   PlusCircleIcon,
   DocumentTextIcon,
   EyeIcon,
-  ArrowLeftIcon,
   ClockIcon
 } from '@heroicons/react/24/outline'
 

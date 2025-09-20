@@ -208,24 +208,10 @@ export default function SimpleCrossword({ size = 9, puzzle = demoPuzzleData }: C
         setDirection('across')
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [grid, userGrid, direction, size])
 
-  // Move to next cell
-  const moveToNextCell = (row: number, col: number) => {
-    if (direction === 'across') {
-      let newCol = col + 1
-      while (newCol < size && grid[row][newCol]?.isBlack) newCol++
-      if (newCol < size) {
-        setSelectedCell({ row, col: newCol })
-      }
-    } else {
-      let newRow = row + 1
-      while (newRow < size && grid[newRow]?.[col]?.isBlack) newRow++
-      if (newRow < size) {
-        setSelectedCell({ row: newRow, col })
-      }
-    }
-  }
+  // Removed unused moveToNextCell function - logic is inline in handleKeyPress
 
   // Move to previous cell
   const moveToPreviousCell = (row: number, col: number) => {

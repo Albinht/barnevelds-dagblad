@@ -7,8 +7,7 @@ import {
   threeLetterWords,
   fourLetterWords,
   fiveLetterWords,
-  getWordsByDifficulty,
-  getLocalWords
+  getWordsByDifficulty
 } from '@/data/crossword/dutch-words'
 
 // Voorgedefinieerde puzzle templates voor verschillende moeilijkheidsgraden
@@ -166,7 +165,7 @@ export class CrosswordGenerator {
   }
 
   // Maak grid van template pattern
-  private createGridFromTemplate(template: any): void {
+  private createGridFromTemplate(template: typeof puzzleTemplates.easy): void {
     const size = template.size
     this.grid = new Grid(size)
 
